@@ -195,8 +195,7 @@
         }
 
         .btn {
-            padding: 12px 32px;
-            border-radius: 8px;
+            border-radius: 14px;
             font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
@@ -205,6 +204,7 @@
         }
 
         .btn-primary {
+            padding: 10px 62px;
             background-color: var(--primary-red);
             color: white;
         }
@@ -214,6 +214,7 @@
         }
 
         .btn-secondary {
+            padding: 10px 32px;
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--text-main);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -512,7 +513,6 @@ slider.addEventListener('mousemove', (e) => {
             const user = JSON.parse(currentUser);
             const userStatus = document.getElementById('user-status');
             if (userStatus) {
-                userStatus.textContent = `Přihlášen jako ${user.name} (${user.email}).`;
             }
         }
 

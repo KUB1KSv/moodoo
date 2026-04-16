@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="cs">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,7 +41,7 @@
             align-items: center;
             padding: 24px 0;
             z-index: 10;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255,255,255,0.05);
         }
 
         .logo {
@@ -68,16 +67,16 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
-            width: auto;
+            width: auto; 
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            right: auto;
+            right: auto;    
             padding-left: 20px;
-
+            
         }
 
         .nav-item {
@@ -123,54 +122,54 @@
         }
 
         /* Hero Section */
-        .hero {
-            position: relative;
-            flex: 1;
-            min-height: 60vh;
-            display: flex;
-            align-items: center;
-            padding: 40px 60px;
-
-            /* Kombinace gradientu zleva (pro čitelnost textu) a obrázku na pozadí */
-            background: linear-gradient(90deg, #0a0a0a 10%, rgba(10, 10, 10, 0.8) 40%, transparent 100%),
+       .hero {
+    position: relative;
+    flex: 1;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    padding: 40px 60px;
+    
+    /* Kombinace gradientu zleva (pro čitelnost textu) a obrázku na pozadí */
+    background: linear-gradient(90deg, #0a0a0a 10%, rgba(10, 10, 10, 0.8) 40%, transparent 100%),
                 url('images/Title.jpg');
+    
+    /* Klíčové vlastnosti pro správné zobrazení obrázku */
+    background-position: right 15%;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    
+    /* Pokud používáš tmavý motiv, zajistíme barvu textu */
+    color: #ffffff;
+}
 
-            /* Klíčové vlastnosti pro správné zobrazení obrázku */
-            background-position: right 15%;
-            background-size: 50%;
-            background-repeat: no-repeat;
+/* Tmavý fade odspodu pro plynulý přechod k dalšímu obsahu */
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    /* Ujisti se, že proměnná --bg-dark odpovídá barvě zbytku stránky */
+    background: linear-gradient(to top, var(--bg-dark, #0a0a0a), transparent);
+    pointer-events: none;
+}
 
-            /* Pokud používáš tmavý motiv, zajistíme barvu textu */
-            color: #ffffff;
-        }
+.hero-content {
+    margin-top: 15%;
+    max-width: 500px;
+    z-index: 2;
+}
 
-        /* Tmavý fade odspodu pro plynulý přechod k dalšímu obsahu */
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 150px;
-            /* Ujisti se, že proměnná --bg-dark odpovídá barvě zbytku stránky */
-            background: linear-gradient(to top, var(--bg-dark, #0a0a0a), transparent);
-            pointer-events: none;
-        }
-
-        .hero-content {
-            margin-top: 15%;
-            max-width: 500px;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 12px;
-            /* Trocha stínu pro lepší čitelnost na členitém pozadí */
-            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-        }
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    /* Trocha stínu pro lepší čitelnost na členitém pozadí */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
 
         .trending-badge {
             font-size: 1.1rem;
@@ -249,30 +248,18 @@
             font-weight: 700;
         }
 
-.carousel {
-    display: flex;
-    gap: 20px;
-    overflow-x: scroll; /* Musí být scroll pro JS výpočty */
-    cursor: grab;
-    user-select: none;
-    
-    /* Vypne veškeré nativní vyhlazování, které by se mohlo prát s naším skriptem */
-    scroll-behavior: auto;
-    -webkit-overflow-scrolling: touch;
-    
-    /* Skrytí posuvníku */
-    scrollbar-width: none;
-}
+        .carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: none; /* Firefox */
+        }
+       
+        .carousel::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
 
-.carousel::-webkit-scrollbar {
-    display: none;
-}
-
-/* Optimalizace pro grafickou kartu */
-.carousel > * {
-    will-change: transform;
-    flex-shrink: 0;
-}
         .card {
             min-width: 180px;
             height: 270px;
@@ -308,7 +295,7 @@
                 align-items: center;
                 padding: 18px 20px;
                 border-right: none;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                border-bottom: 1px solid rgba(255,255,255,0.08);
             }
 
             .nav-menu {
@@ -388,123 +375,33 @@
                 height: 240px;
             }
         }
+
     </style>
 </head>
-
 <body>
 
     <aside class="sidebar">
         <nav class="nav-menu">
             <div class="nav-item" id="openSearch">
-                <svg viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
             </div>
-            <div class="nav-item active" id="openHome">
-                <svg viewBox="0 0 24 24">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                </svg>
+            <div class="nav-item" id="openHome">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             </div>
-            <div class="nav-item" id="openMessages">
-                <svg viewBox="0 0 24 24">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
+            <div class="nav-item active" id="openMessages">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
             </div>
             <div class="nav-item" id="openSettings">
-                <svg viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </div>
         </nav>
     </aside>
 
     <main class="main-content">
-
-        <div class="hero">
-            <div class="hero-content">
-                <h1 class="hero-title">Kafka's<br>Methamorphosis</h1>
-                <p class="trending-badge"><span>#1</span> v trendech</p>
-                <p id="user-status" class="trending-badge"
-                    style="margin-bottom: 20px; color: #f1f1f1; font-size: 1rem; font-weight: 500;"></p>
-                <p class="hero-desc">
-                    Jak se rodina Gregora Samsi vyrovná s jeho proměnou? Zvládnete se rozhodovat správně za Gregora a
-                    dojít k happy-endu, nebo obrátíte celou rodinu naruby?
-                </p>
-                <div class="buttons">
-                    <button class="btn btn-primary">Přečíst</button>
-                    <button class="btn btn-secondary">Více informací</button>
-                </div>
-            </div>
-
-            <div class="age-rating">14+</div>
-        </div>
-
-        <div class="carousel-section">
-            <h2 class="carousel-title">Komiksy</h2>
-            <div class="carousel">
-                <div class="card"><img src="images/Obálka-KCDII.v3.1.png" alt="Warriors"></div>
-                <div class="card"><img src="images/banner.jpg" alt="Warriors 2"></div>
-                <div class="card"><img src="images/Title.jpg" alt="Wings of Fire 1"></div>
-                <div class="card"><img src="images/Uvodni 2.jpg" alt="Hamlet"></div>
-                <div class="card"><img src="images/uvodni 3.jpg" alt="Wings of Fire 2"></div>
-                <div class="card"><img src="images/uvodni 4.jpg" alt="Wings of Fire 2"></div>
-                <div class="card"><img src="images/uvodni 5.jpg" alt="Wings of Fire 2"></div>
-                <div class="card"><img src="images/uvodni_bak.jpg" alt="Wings of Fire 2"></div>
-                <div class="card"><img src="images/uvodní.jpg" alt="Wings of Fire 2"></div>
-            </div>
-        </div>
-
+       
+       
     </main>
     <script>
-
-const slider = document.querySelector('.carousel');
-let isDown = false;
-let startX;
-let scrollLeft;
-let velocity = 0;
-let rafID;
-
-// Plynulý dojezd (Momentum)
-const easeOut = () => {
-  if (Math.abs(velocity) > 0.1) {
-    slider.scrollLeft += velocity;
-    velocity *= 0.95; // Zpomalení (tření)
-    rafID = requestAnimationFrame(easeOut);
-  }
-};
-
-slider.addEventListener('mousedown', (e) => {
-  isDown = true;
-  slider.style.cursor = 'grabbing';
-  slider.style.scrollBehavior = 'auto'; // Vypne vnitřní animace při tažení
-  startX = e.pageX - slider.offsetLeft;
-  scrollLeft = slider.scrollLeft;
-  cancelAnimationFrame(rafID);
-});
-
-slider.addEventListener('mouseleave', () => {
-  isDown = false;
-  slider.style.cursor = 'grab';
-});
-
-slider.addEventListener('mouseup', () => {
-  isDown = false;
-  slider.style.cursor = 'grab';
-  easeOut(); // Spustí plynulý dojezd
-});
-
-slider.addEventListener('mousemove', (e) => {
-  if (!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - slider.offsetLeft;
-  const walk = (x - startX) * 1.5; // Citlivost
-  const prevScroll = slider.scrollLeft;
-  slider.scrollLeft = scrollLeft - walk;
-  velocity = slider.scrollLeft - prevScroll; // Vypočítá švih
-});
         const currentUser = localStorage.getItem('moodooCurrentUser');
         if (!currentUser) {
             window.location.href = 'po_prihlaseni.html';
@@ -527,11 +424,10 @@ slider.addEventListener('mousemove', (e) => {
         document.getElementById('openSettings')?.addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
-
-        document.getElementById('openHome')?.addEventListener('click', () => {
+        
+           document.getElementById('openHome')?.addEventListener('click', () => {
             window.location.href = 'home.html';
         });
     </script>
 </body>
-
 </html>

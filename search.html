@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,7 @@
             --accent: #e53935;
             --muted: #a8a8a8;
             --text: #fff;
-            --border: rgba(255,255,255,0.12);
+            --border: rgba(255, 255, 255, 0.12);
         }
 
         * {
@@ -23,19 +24,113 @@
             font-family: 'Inter', sans-serif;
         }
 
+        html,
         body {
-            min-height: 100vh;
-            background: linear-gradient(180deg, #090909 0%, #030303 100%);
-            color: var(--text);
+            height: 100%;
+            overflow: hidden;
         }
 
-        .page {
-            width: 100%;
+        body {
+            background: linear-gradient(180deg, #090909 0%, #030303 100%);
+            color: var(--text);
+            display: flex;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 80px;
             min-height: 100vh;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            z-index: 10;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            position: fixed;
+            /* fixed on the left */
+            top: 0;
+            left: 0;
+        }
+
+        .logo {
+            color: var(--accent);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 20px;
+            height: 10px;
+            background: white;
+            clip-path: polygon(20% 0%, 0% 100%, 100% 100%, 80% 0%);
+            margin-top: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: auto;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: auto;    
+            padding-left: 20px;
+        }
+
+        .nav-item {
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-item:hover {
+            color: #fff;
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+        }
+
+        .nav-bottom {
+            margin-top: auto;
+        }
+
+        /* ── MAIN PAGE ── */
+        .page {
+            margin-left: 80px;
+            width: calc(100% - 80px);
+            height: 100vh;
             padding: 36px 40px;
             display: flex;
             flex-direction: column;
             gap: 32px;
+            overflow-y: auto;
+            /* only this scrolls */
         }
 
         header {
@@ -43,43 +138,6 @@
             justify-content: space-between;
             align-items: center;
             gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .brand-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent);
-        }
-
-        .brand-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .close-button,
-        .back-button {
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            border-radius: 999px;
-            padding: 12px 18px;
-            cursor: pointer;
-            transition: background 0.2s ease, border-color 0.2s ease;
-        }
-
-        .close-button:hover,
-        .back-button:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(255,255,255,0.2);
         }
 
         .search-panel {
@@ -95,7 +153,7 @@
             border: 1px solid var(--border);
             border-radius: 26px;
             padding: 32px;
-            box-shadow: 0 20px 65px rgba(0,0,0,0.35);
+            box-shadow: 0 20px 65px rgba(0, 0, 0, 0.35);
         }
 
         .search-card h1 {
@@ -108,15 +166,15 @@
             width: 100%;
             padding: 20px 24px;
             border-radius: 18px;
-            border: 1px solid rgba(255,255,255,0.14);
-            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.04);
             color: var(--text);
             font-size: 1.05rem;
             outline: none;
         }
 
         .search-input:focus {
-            border-color: rgba(229,57,53,0.8);
+            border-color: rgba(229, 57, 53, 0.8);
         }
 
         .hint {
@@ -149,8 +207,8 @@
         }
 
         .tile {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 16px;
             overflow: hidden;
             min-height: 220px;
@@ -159,7 +217,7 @@
 
         .tile:hover {
             transform: translateY(-4px);
-            border-color: rgba(229,57,53,0.6);
+            border-color: rgba(229, 57, 53, 0.6);
         }
 
         .tile img {
@@ -188,24 +246,56 @@
         footer {
             margin-top: auto;
             text-align: center;
-            color: rgba(255,255,255,0.55);
+            color: rgba(255, 255, 255, 0.55);
             font-size: 0.95rem;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                width: 100%;
+                height: 64px;
+                min-height: unset;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 0 20px;
+                top: 0;
+                left: 0;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .logo {
+                margin-bottom: 0;
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .logo-icon {
+                margin-top: 0;
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                gap: 18px;
+                width: auto;
+            }
+
+            .nav-bottom {
+                margin-top: 0;
+            }
+
+            .page {
+                margin-left: 0;
+                margin-top: 64px;
+                width: 100%;
+            }
         }
 
         @media (max-width: 720px) {
             .page {
                 padding: 24px 18px;
-            }
-
-            header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 18px;
-            }
-
-            .close-button,
-            .back-button {
-                width: 100%;
             }
 
             .search-card h1 {
@@ -236,24 +326,37 @@
             }
         }
     </style>
+    <style type="text/css" id="operaUserStyle"></style>
 </head>
-<body>
-    <div class="page">
-        <header>
-            <div class="brand">
-                <div class="brand-dot"></div>
-                <div class="brand-title">Moodoo Search</div>
-            </div>
-            <div>
-                <button class="back-button" type="button" onclick="window.location.href='home.html'">Back</button>
-                <button class="close-button" type="button" onclick="window.location.href='home.html'">Close</button>
-            </div>
-        </header>
 
+<body>
+
+    <!-- SIDEBAR -->
+        <aside class="sidebar">
+        <nav class="nav-menu">
+            <div class="nav-item active" id="openSearch">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <div class="nav-item" id="openHome">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <div class="nav-item" id="openMessages">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <div class="nav-item" id="openSettings">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+        </nav>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="page">
         <section class="search-panel">
             <div class="search-card">
                 <h1>Find your next story</h1>
-                <input id="searchBox" class="search-input" type="search" placeholder="Search movies, series, comics, authors..." autofocus>
+                <input id="searchBox" class="search-input" type="search"
+                    placeholder="Search movies, series, comics, authors..." autofocus="">
                 <p class="hint">Start typing to see suggestions. Press Enter to search the Moodoo catalog.</p>
             </div>
 
@@ -262,21 +365,24 @@
                     <h2>Popular searches</h2>
                     <div class="cards">
                         <div class="tile">
-                            <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=500&q=80" alt="Mystery">
+                            <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+                                alt="Mystery">
                             <div class="tile-body">
                                 <div class="tile-title">Mysterious dramas</div>
                                 <div class="tile-subtitle">Suspense, secrets and mind-bending endings.</div>
                             </div>
                         </div>
                         <div class="tile">
-                            <img src="https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&fit=crop&w=500&q=80" alt="Comics">
+                            <img src="https://images.unsplash.com/photo-1517602302552-471fe67acf66?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+                                alt="Comics">
                             <div class="tile-body">
                                 <div class="tile-title">Best comics</div>
                                 <div class="tile-subtitle">Top illustrated adventures and dark fantasy.</div>
                             </div>
                         </div>
                         <div class="tile">
-                            <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=500&q=80" alt="Classics">
+                            <img src="https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+                                alt="Classics">
                             <div class="tile-body">
                                 <div class="tile-title">Classic reads</div>
                                 <div class="tile-subtitle">Timeless stories and unforgettable characters.</div>
@@ -288,21 +394,24 @@
                     <h2>Trending now</h2>
                     <div class="cards">
                         <div class="tile">
-                            <img src="https://images.unsplash.com/photo-1517607644680-87a2b1fe3e94?auto=format&fit=crop&w=500&q=80" alt="Drama">
+                            <img src="https://images.unsplash.com/photo-1517607644680-87a2b1fe3e94?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+                                alt="Drama">
                             <div class="tile-body">
                                 <div class="tile-title">Dark drama</div>
                                 <div class="tile-subtitle">Intense stories with gripping twists.</div>
                             </div>
                         </div>
                         <div class="tile">
-                            <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&fit=crop&w=500&q=80" alt="Sci-Fi">
+                            <img src="https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+                                alt="Sci-Fi">
                             <div class="tile-body">
                                 <div class="tile-title">Sci-fi epics</div>
                                 <div class="tile-subtitle">New worlds, old myths and high energy.</div>
                             </div>
                         </div>
                         <div class="tile">
-                            <img src="https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=500&q=80" alt="Adventure">
+                            <img src="https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&amp;fit=crop&amp;w=500&amp;q=80"
+                                alt="Adventure">
                             <div class="tile-body">
                                 <div class="tile-title">Adventure</div>
                                 <div class="tile-subtitle">Fast-paced, visual stories with bold heroes.</div>
@@ -319,7 +428,7 @@
     </div>
 
     <script>
-        document.getElementById('searchBox')?.addEventListener('keydown', function(event) {
+        document.getElementById('searchBox')?.addEventListener('keydown', function (event) {
             if (event.key === 'Enter') {
                 const query = event.target.value.trim();
                 if (query) {
@@ -327,6 +436,25 @@
                 }
             }
         });
+
+                document.getElementById('openSearch')?.addEventListener('click', () => {
+            window.location.href = 'search.html';
+        });
+
+        document.getElementById('openMessages')?.addEventListener('click', () => {
+            window.location.href = 'forum.html';;
+        });
+
+        document.getElementById('openSettings')?.addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+        
+           document.getElementById('openHome')?.addEventListener('click', () => {
+            window.location.href = 'home.html';
+        });
     </script>
+
+
 </body>
+
 </html>

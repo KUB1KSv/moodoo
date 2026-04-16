@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodoo - Kafka's Metamorphosis</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-sidebar: #0f0f0f;
+            --primary-red: #E53935;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --btn-hover: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 80px;
+            background-color: transparent;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 0;
+            z-index: 10;
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .logo {
+            color: var(--primary-red);
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 20px;
+            height: 10px;
+            background: white;
+            clip-path: polygon(20% 0%, 0% 100%, 100% 100%, 80% 0%);
+            margin-top: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .nav-item {
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-item:hover {
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            color: var(--primary-red);
+        }
+
+        .nav-bottom {
+            margin-top: auto;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        /* Hero Section */
+       .hero {
+    position: relative;
+    flex: 1;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    padding: 40px 60px;
+    
+    /* Kombinace gradientu zleva (pro čitelnost textu) a obrázku na pozadí */
+    background: linear-gradient(90deg, #0a0a0a 10%, rgba(10, 10, 10, 0.8) 40%, transparent 100%),
+                url('images/Title.jpg');
+    
+    /* Klíčové vlastnosti pro správné zobrazení obrázku */
+    background-position: right 15%;
+    background-size: 50%;
+    background-repeat: no-repeat;
+    
+    /* Pokud používáš tmavý motiv, zajistíme barvu textu */
+    color: #ffffff;
+}
+
+/* Tmavý fade odspodu pro plynulý přechod k dalšímu obsahu */
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    /* Ujisti se, že proměnná --bg-dark odpovídá barvě zbytku stránky */
+    background: linear-gradient(to top, var(--bg-dark, #0a0a0a), transparent);
+    pointer-events: none;
+}
+
+.hero-content {
+    margin-top: 15%;
+    max-width: 500px;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    /* Trocha stínu pro lepší čitelnost na členitém pozadí */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+        .trending-badge {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .trending-badge span {
+            color: var(--primary-red);
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-red);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .age-rating {
+            position: absolute;
+            right: 40px;
+            bottom: 40px;
+            background-color: rgba(212, 163, 115, 0.9);
+            color: #333;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        /* --- CAROUSEL (Komiksy) --- */
+        .carousel-section {
+            padding: 0 60px 40px 60px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .carousel-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scrollbar-width: none; /* Firefox */
+        }
+       
+        .carousel::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .card {
+            min-width: 180px;
+            height: 270px;
+            background-color: #222;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+                min-height: 100vh;
+                height: auto;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 18px 20px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                gap: 18px;
+                width: auto;
+                justify-content: center;
+            }
+
+            .main-content {
+                overflow-y: visible;
+            }
+
+            .hero {
+                min-height: 50vh;
+                padding: 30px 30px 40px;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .buttons {
+                flex-wrap: wrap;
+            }
+
+            .carousel-section {
+                padding: 0 30px 40px 30px;
+            }
+
+            .age-rating {
+                right: 24px;
+                bottom: 24px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .sidebar {
+                padding: 14px 16px;
+            }
+
+            .nav-menu {
+                gap: 12px;
+            }
+
+            .hero {
+                padding: 24px 18px 30px;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .hero-desc {
+                font-size: 0.95rem;
+            }
+
+            .buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .buttons .btn {
+                width: 100%;
+            }
+
+            .carousel {
+                gap: 14px;
+            }
+
+            .card {
+                min-width: 150px;
+                height: 240px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">
+            Moodoo
+            <div class="logo-icon"></div>
+        </div>
+        <nav class="nav-menu">
+            <div class="nav-item" id="openSearch">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+        </nav>
+        <div class="nav-item nav-bottom">
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+    </aside>
+
+    <main class="main-content">
+       
+        <div class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Kafka's<br>Methamorphosis</h1>
+                <p class="trending-badge"><span>#1</span> v trendech</p>
+                <p id="user-status" class="trending-badge" style="margin-bottom: 20px; color: #f1f1f1; font-size: 1rem; font-weight: 500;"></p>
+                <p class="hero-desc">
+                    Jak se rodina Gregora Samsi vyrovná s jeho proměnou? Zvládnete se rozhodovat správně za Gregora a dojít k happy-endu, nebo obrátíte celou rodinu naruby?
+                </p>
+                <div class="buttons">
+                    <button class="btn btn-primary">Přečíst</button>
+                    <button class="btn btn-secondary">Více informací</button>
+                </div>
+            </div>
+           
+            <div class="age-rating">14+</div>
+        </div>
+
+        <div class="carousel-section">
+            <h2 class="carousel-title">Komiksy</h2>
+            <div class="carousel">
+                <div class="card"><img src="images/Obálka-KCDII.v3.1.png" alt="Warriors"></div>
+                <div class="card"><img src="images/banner.jpg" alt="Warriors 2"></div>
+                <div class="card"><img src="images/Title.jpg" alt="Wings of Fire 1"></div>
+                <div class="card"><img src="images/Uvodni 2.jpg" alt="Hamlet"></div>
+                <div class="card"><img src="images/uvodni 3.jpg" alt="Wings of Fire 2"></div>
+                <div class="card"><img src="images/uvodni 4.jpg" alt="Wings of Fire 2"></div>
+                <div class="card"><img src="images/uvodni 5.jpg" alt="Wings of Fire 2"></div>
+                <div class="card"><img src="images/uvodni_bak.jpg" alt="Wings of Fire 2"></div>
+                <div class="card"><img src="images/uvodní.jpg" alt="Wings of Fire 2"></div>
+            </div>
+        </div>
+       
+    </main>
+    <script>
+        const currentUser = localStorage.getItem('moodooCurrentUser');
+        if (!currentUser) {
+            window.location.href = 'po_prihlaseni.html';
+        } else {
+            const user = JSON.parse(currentUser);
+            const userStatus = document.getElementById('user-status');
+            if (userStatus) {
+                userStatus.textContent = `Přihlášen jako ${user.name} (${user.email}).`;
+            }
+        }
+
+        document.getElementById('openSearch')?.addEventListener('click', () => {
+            window.location.href = 'search.html';
+        });
+    </script>
+</body>
+</html>

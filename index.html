@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,23 +9,26 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
 
         :root {
-            --bg: #050505;
-            --bg-soft: rgba(0, 0, 0, 0.65);
+            --bg: #12161A;
+            --bg-soft: #12161A;
             --accent: #e50914;
             --text: #f3f3f3;
             --text-muted: #d1d1d1;
             --border: rgba(255, 255, 255, 0.15);
+            --primary-red: #E53935;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --btn-hover: #f44336;
         }
 
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Inter', sans-serif;
         }
 
         body {
-            background: #000;
+            background: #12161A;
             color: var(--text);
             min-height: 100vh;
         }
@@ -36,7 +40,6 @@
 
         .page {
             position: relative;
-            max-width: 1200px;
             margin: 0 auto;
             padding-bottom: 40px;
         }
@@ -45,9 +48,10 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.9)),
-                        url('https://images.unsplash.com/photo-1517604931442-7be35fbc83d2?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            background: linear-gradient(180deg, #12161A, rgba(0, 0, 0, 0.9)),
+                url('images/image\ 21.png') center/cover no-repeat;
             z-index: -1;
+            background-repeat: no-repeat;
         }
 
         .navbar {
@@ -62,7 +66,7 @@
             font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: 0.15em;
-            text-shadow: 0 18px 50px rgba(229, 57, 53, 0.12);
+            text-shadow: 0 18px 50px #12161A;
         }
 
         .nav-links {
@@ -81,7 +85,7 @@
         .menu-toggle {
             display: none;
             border: none;
-            background: rgba(255,255,255,0.08);
+            background: #12161A;
             width: 44px;
             height: 44px;
             border-radius: 14px;
@@ -93,14 +97,14 @@
         }
 
         .menu-toggle:hover {
-            background: rgba(255,255,255,0.15);
+            background: #12161A;
         }
 
         .menu-toggle span {
             display: block;
             width: 22px;
             height: 2px;
-            background: var(--text);
+            background: #12161A;
             border-radius: 2px;
             position: relative;
         }
@@ -111,7 +115,7 @@
             position: absolute;
             width: 22px;
             height: 2px;
-            background: var(--text);
+            background: #12161A;
             border-radius: 2px;
             left: 0;
             transition: transform 0.3s ease;
@@ -138,12 +142,20 @@
         }
 
         .signin-btn {
+            border-radius: 10px;
+            font-family: "Inter", sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
             padding: 10px 22px;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.55);
-            color: var(--text);
-            font-weight: 600;
+            background-color: #e50914;
+            color: white;
+        }
+
+        .signin-btn:hover {
+            background-color: #12161A;
         }
 
         .lang-dropdown {
@@ -157,13 +169,13 @@
             top: 100%;
             right: 24px;
             background: rgba(0, 0, 0, 0.95);
-            border: 1px solid rgba(255,255,255,0.14);
+            border: 1px solid rgba(255, 255, 255, 0.14);
             border-radius: 20px;
             width: min(260px, 90vw);
             flex-direction: column;
             gap: 0;
             padding: 14px 0;
-            box-shadow: 0 18px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 18px 60px #12161A;
             opacity: 1;
             z-index: 20;
         }
@@ -178,11 +190,11 @@
         }
 
         .lang-toggle {
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text);
+            border: 1px solid #DAA050;
+            background: #12161A;
+            color: #DAA050;
             padding: 10px 14px;
-            border-radius: 999px;
+            border-radius: 10px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -204,7 +216,6 @@
         }
 
         .lang-current {
-            color: var(--text-muted);
             font-size: 0.92rem;
             font-weight: 600;
             white-space: nowrap;
@@ -215,9 +226,9 @@
             top: calc(100% + 10px);
             right: 0;
             min-width: 180px;
-            background: rgba(10, 10, 10, 0.98);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
+            background: #12161A;
+            border: 1px solid #DAA050;
+            border-radius: 10px;
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
             z-index: 20;
             display: none;
@@ -260,8 +271,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at top, rgba(229,57,53,0.14), transparent 35%),
-                        linear-gradient(180deg, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
+            background-repeat: no-repeat;
             pointer-events: none;
         }
 
@@ -301,7 +311,6 @@
         }
 
         .email-form input {
-            flex: 1 1 260px;
             min-height: 56px;
             border: none;
             border-radius: 12px;
@@ -310,7 +319,7 @@
             background: rgba(255, 255, 255, 0.12);
             color: var(--text);
             outline: none;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
         }
 
         .email-form button {
@@ -342,12 +351,12 @@
 
         .feature-card {
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255,255,255,0.12);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 24px;
             padding: 28px;
             min-height: 180px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 18px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
         }
 
         .feature-card h3 {
@@ -386,8 +395,8 @@
             border-radius: 14px;
             overflow: hidden;
             min-height: 260px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.1), rgba(0,0,0,0.65));
-            box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.65));
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
         }
 
         .movie-card img {
@@ -403,6 +412,15 @@
             font-size: 0.95rem;
         }
 
+        .pozadi {
+            background: linear-gradient(90deg, #12161A 1%, rgba(10, 10, 10, 0.8) 20%, transparent 100%),
+                url('images/image\ 21.png');
+            background-size: 1000%;
+            background-repeat: no-repeat;
+            background-color: #12161A;
+
+        }
+
         @media (max-width: 900px) {
             .navbar {
                 padding: 24px 24px 0;
@@ -415,19 +433,20 @@
                 display: inline-flex;
             }
 
+
             .nav-links {
                 display: none;
                 position: absolute;
                 top: 100%;
                 right: 24px;
                 background: rgba(0, 0, 0, 0.96);
-                border: 1px solid rgba(255,255,255,0.14);
+                border: 1px solid rgba(255, 255, 255, 0.14);
                 border-radius: 22px;
                 width: min(280px, 90vw);
                 flex-direction: column;
                 gap: 0;
                 padding: 14px 0;
-                box-shadow: 0 22px 70px rgba(0,0,0,0.4);
+                box-shadow: 0 22px 70px rgba(0, 0, 0, 0.4);
                 opacity: 0;
                 transform: translateY(-10px);
                 pointer-events: none;
@@ -491,6 +510,12 @@
 
             .movie-grid {
                 grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+        }
+
+        @media (min-width: 560px) {
+            .email-form input {
+                flex: 1 1 260px;
             }
         }
 
@@ -583,18 +608,30 @@
         }
     </style>
 </head>
+
 <body>
     <div class="page">
         <header class="navbar">
-            <a class="brand" href="#">Moodoo</a>
-            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span></button>
+            <a class="brand" href="#"><img src="images/image 22.png" alt="Moodoo"></a>
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu"
+                aria-expanded="false"><span></span></button>
             <div class="nav-links" id="navLinks">
                 <a data-text="news" href="#">Novinky</a>
                 <a data-text="categories" href="#">Kategorie</a>
-                <a class="signin-btn" data-text="signIn" href="po_prihlaseni.html">Přihlásit</a>
                 <div class="lang-dropdown">
                     <button class="lang-toggle" type="button" aria-haspopup="listbox" aria-expanded="false">
+                        <svg class="lang-globe" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="2" y1="12" x2="22" y2="12" />
+                            <path
+                                d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                        </svg>
                         <span class="lang-current">Čeština</span>
+                        <svg class="lang-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+    </svg>
                     </button>
                     <div class="lang-menu" role="listbox">
                         <button class="lang-item active" type="button" data-lang="cs">🇨🇿 Čeština</button>
@@ -603,13 +640,14 @@
                         <button class="lang-item" type="button" data-lang="de">🇩🇪 Deutsch</button>
                     </div>
                 </div>
+                <a class="signin-btn" data-text="signIn" href="po_prihlaseni.html">Přihlásit se</a>
             </div>
         </header>
 
         <main class="hero">
             <div class="hero-copy">
                 <h1 data-text="heroTitle">Príběhy, které se rozhodují s tebou.</h1>
-                <p data-text="heroDesc">Rozhoduj se jako hrdina — jejich  směr určuješ ty.</p>
+                <p data-text="heroDesc">Rozhoduj se jako hrdina — jejich směr určuješ ty.</p>
 
                 <form class="email-form">
                     <input type="email" placeholder="Zadejte e-mail" aria-label="E-mail" required>
@@ -618,28 +656,33 @@
             </div>
         </main>
 
+
         <section class="features">
             <div class="feature-card">
                 <h3 data-text="feature1Title">Nejnovější hity každý týden</h3>
-                <p data-text="feature1Desc">Nové filmy a série přicházejí pravidelně, stejně jako exkluzivní originály a největší tituly od hollywoodských studií.</p>
+                <p data-text="feature1Desc">Nové filmy a série přicházejí pravidelně, stejně jako exkluzivní originály a
+                    největší tituly od hollywoodských studií.</p>
             </div>
             <div class="feature-card">
                 <h3 data-text="feature2Title">Neomezené streamování</h3>
-                <p data-text="feature2Desc">Sledujte bez přerušení na jakémkoli zařízení. Nastavte profily pro každého člena domácnosti a uložte své oblíbené.</p>
+                <p data-text="feature2Desc">Sledujte bez přerušení na jakémkoli zařízení. Nastavte profily pro každého
+                    člena domácnosti a uložte své oblíbené.</p>
             </div>
             <div class="feature-card">
                 <h3 data-text="feature3Title">Snadné ovládání a rychlé vyhledávání</h3>
-                <p data-text="feature3Desc">Najděte přesně to, co chcete, aniž byste ztráceli čas. Doporučení se učí z vašich preferencí.</p>
+                <p data-text="feature3Desc">Najděte přesně to, co chcete, aniž byste ztráceli čas. Doporučení se učí z
+                    vašich preferencí.</p>
             </div>
         </section>
 
         <section class="showcase">
-            <h2 class="carousel-title" style="font-size:1.8rem; margin-bottom:18px; font-weight:800; padding-left:48px;" data-text="showcaseTitle">Co se právě hraje</h2>
+            <h2 class="carousel-title" style="font-size:1.8rem; margin-bottom:18px; font-weight:800; padding-left:48px;"
+                data-text="showcaseTitle">Co se právě hraje</h2>
             <div class="movie-grid" style="padding: 0 48px 0 48px;">
-                <div class="movie-card"><img src="https://images.unsplash.com/photo-1517604931442-7be35fbc83d2?auto=format&fit=crop&w=800&q=80" alt="Show 1"></div>
-                <div class="movie-card"><img src="https://images.unsplash.com/photo-1517604931442-7be35fbc83d2?auto=format&fit=crop&w=800&q=80" alt="Show 2"></div>
-                <div class="movie-card"><img src="https://images.unsplash.com/photo-1517604931442-7be35fbc83d2?auto=format&fit=crop&w=800&q=80" alt="Show 3"></div>
-                <div class="movie-card"><img src="https://images.unsplash.com/photo-1517604931442-7be35fbc83d2?auto=format&fit=crop&w=800&q=80" alt="Show 4"></div>
+                <div class="movie-card"><img src="images/Uvodni 2.jpg" alt="Show 1"></div>
+                <div class="movie-card"><img src="images/uvodni 3.jpg" alt="Show 2"></div>
+                <div class="movie-card"><img src="images/uvodni 4.jpg" alt="Show 3"></div>
+                <div class="movie-card"><img src="images/uvodni 5.jpg" alt="Show 4"></div>
             </div>
         </section>
 
@@ -652,7 +695,7 @@
             cs: {
                 news: 'Novinky',
                 categories: 'Kategorie',
-                signIn: 'Přihlásit',
+                signIn: 'Přihlásit se',
                 heroTitle: 'Příběhy, které se rozhodují s tebou.',
                 heroDesc: 'Rozhoduj se jako hrdina — jejich  směr určuješ ty.',
                 placeholder: 'Zadejte e-mail',
@@ -665,7 +708,7 @@
                 feature2Desc: 'Sledujte bez přerušení na jakémkoli zařízení. Nastavte profily pro každého člena domácnosti a uložte své oblíbené.',
                 feature3Title: 'Snadné ovládání a rychlé vyhledávání',
                 feature3Desc: 'Najděte přesně to, co chcete, aniž byste ztráceli čas. Doporučení se učí z vašich preferencí.',
-                showcaseTitle: 'Co se právě hraje',
+                showcaseTitle: 'Tohle teď čte každý.',
                 languageName: 'Čeština'
             },
             en: {
@@ -673,8 +716,8 @@
                 news: 'News',
                 categories: 'Categories',
                 signIn: 'Sign In',
-                heroTitle: 'Moodoo',
-                heroDesc: 'Choose your story the way you want',
+                heroTitle: 'Stories that evolve with you.',
+                heroDesc: 'Decide like a hero — you lead the way.',
                 placeholder: 'Enter your email',
                 cta: 'Start',
                 footer: 'Explore Moodoo — your new home for movies and series.',
@@ -684,7 +727,7 @@
                 feature2Desc: 'Watch without interruption on any device. Set up profiles for everyone in your household and save favorites.',
                 feature3Title: 'Easy control and fast search',
                 feature3Desc: 'Find exactly what you want without wasting time. Recommendations learn from your preferences.',
-                showcaseTitle: 'Now playing',
+                showcaseTitle: 'Trending now',
                 languageName: 'English'
             },
             es: {
@@ -692,8 +735,8 @@
                 news: 'Novedades',
                 categories: 'Categorías',
                 signIn: 'Iniciar sesión',
-                heroTitle: 'Moodoo',
-                heroDesc: 'Elige tu historia como quieras',
+                heroTitle: 'Historias que tú decides.',
+                heroDesc: 'Decide como un héroe: tú marcas el camino.',
                 placeholder: 'Introduce tu correo',
                 cta: 'Comenzar',
                 footer: 'Explora Moodoo: tu nuevo hogar para películas y series.',
@@ -703,7 +746,7 @@
                 feature2Desc: 'Mira sin interrupciones en cualquier dispositivo. Configura perfiles para todos en tu hogar y guarda favoritos.',
                 feature3Title: 'Control fácil y búsqueda rápida',
                 feature3Desc: 'Encuentra exactamente lo que quieres sin perder tiempo. Las recomendaciones aprenden de tus preferencias.',
-                showcaseTitle: 'Ahora en pantalla',
+                showcaseTitle: 'Lo más leído',
                 switchLabel: '🇪🇸 ES',
                 languageName: 'Español'
             },
@@ -712,8 +755,8 @@
                 news: 'Neuheiten',
                 categories: 'Kategorien',
                 signIn: 'Anmelden',
-                heroTitle: 'Moodoo',
-                heroDesc: 'Wähle deine Geschichte so, wie du willst',
+                heroTitle: 'Geschichten, die du entscheidest.',
+                heroDesc: 'Wähle wie ein Held — du weist ihnen den Weg.',
                 placeholder: 'Gib deine E-Mail ein',
                 cta: 'Starten',
                 footer: 'Entdecke Moodoo – dein neues Zuhause für Filme und Serien.',
@@ -723,7 +766,7 @@
                 feature2Desc: 'Sieh zu, ohne Unterbrechung auf jedem Gerät. Richte Profile für alle in deinem Haushalt ein und speichere Favoriten.',
                 feature3Title: 'Einfache Steuerung und schnelle Suche',
                 feature3Desc: 'Finde genau das, was du willst, ohne Zeit zu verlieren. Empfehlungen lernen aus deinen Vorlieben.',
-                showcaseTitle: 'Jetzt im Angebot',
+                showcaseTitle: 'Aktuelle Toptitel',
                 switchLabel: '🇩🇪 DE',
                 languageName: 'Deutsch'
             }
@@ -790,4 +833,5 @@
         updateLanguage(currentLang);
     </script>
 </body>
+
 </html>

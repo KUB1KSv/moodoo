@@ -11,11 +11,11 @@
         :root {
             --bg: #12161A;
             --bg-soft: #12161A;
-            --accent: #e50914;
+            --accent: #D44543;
             --text: #f3f3f3;
             --text-muted: #d1d1d1;
             --border: rgba(255, 255, 255, 0.15);
-            --primary-red: #E53935;
+            --primary-red: #D44543;
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
             --btn-hover: #f44336;
@@ -150,12 +150,12 @@
             border: none;
             transition: all 0.2s;
             padding: 10px 22px;
-            background-color: #e50914;
+            background-color: #D44543;
             color: white;
         }
 
         .signin-btn:hover {
-            background-color: #12161A;
+            background-color: rgb(199, 54, 43);
         }
 
         .lang-dropdown {
@@ -327,7 +327,7 @@
             min-height: 56px;
             border: none;
             border-radius: 12px;
-            background: linear-gradient(135deg, #e50914, #ff4b5a);
+            background: #D44543;
             color: white;
             font-size: 1rem;
             font-weight: 700;
@@ -338,15 +338,17 @@
         }
 
         .email-form button:hover {
-            transform: translateY(-1px);
             box-shadow: 0 24px 60px rgba(229, 57, 53, 0.22);
+            background: rgb(199, 54, 43);
         }
 
         .features {
             display: grid;
             grid-template-columns: repeat(3, minmax(220px, 1fr));
             gap: 18px;
-            margin: 64px 0 46px;
+            margin: 64px 50px 46px;
+
+            justify-content: center;
         }
 
         .feature-card {

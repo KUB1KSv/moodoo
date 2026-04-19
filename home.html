@@ -11,10 +11,10 @@
         :root {
             --bg-dark: #0a0a0a;
             --bg-sidebar: #0f0f0f;
-            --primary-red: #E53935;
+            --primary-red: #D44543;
             --text-main: #ffffff;
             --text-muted: #a0a0a0;
-            --btn-hover: #f44336;
+            --btn-hover: rgb(199, 54, 43);
         }
 
         * {
@@ -250,7 +250,7 @@
         .carousel-title {
             position: relative;
             padding-top: 50px;
-             font-family: "Encode Sans", sans-serif;
+            font-family: "Encode Sans", sans-serif;
             font-size: 1.5rem;
             margin-bottom: 20px;
             font-weight: 700;
@@ -395,9 +395,59 @@
             line-height: 1.5;
         }
 
-        .popup-title{
-                  font-family: "Aclonica", sans-serif;
-                font-weight: 400;
+        .popup-title {
+            font-family: "Aclonica", sans-serif;
+            font-weight: 400;
+        }
+
+        /* Kontejner ikony */
+        #openSettings {
+            position: relative;
+            /* Tohle zvětšuje plochu, na kterou se dá najet */
+        }
+
+        .side-dropdown {
+            display: none;
+            position: absolute;
+
+            /* Pozice: hned vedle ikony */
+            top: 0;
+            left: 100%;
+
+            /* Tohle je ten MOST: */
+            /* Menu začíná hned u ikony, ale vnitřek posuneme */
+            padding-left: 5px;
+
+            z-index: 100;
+        }
+
+        /* Vnitřní box, který uživatel skutečně uvidí */
+        .dropdown-content {
+            background: #12161A;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid #DAA050;
+            border-radius: 10px;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Zobrazení při najetí */
+        #openSettings:hover .side-dropdown {
+            display: block;
+        }
+
+        /* Styly odkazů */
+        .dropdown-content a {
+            color: #ffffff;
+            padding: 8px 12px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #232b33;
+            border-radius: 10px;
         }
 
         @media (min-width: 1440px) {
@@ -640,6 +690,13 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
+
+                <div class="side-dropdown">
+                    <div class="dropdown-content">
+                        <a href="profile.html">Profil</a>
+                        <a href="#">Odhlásit se</a>
+                    </div>
+                </div>
             </div>
         </nav>
     </aside>
@@ -756,6 +813,8 @@
             velocity = slider.scrollLeft - prevScroll;
         });
 
+
+
         // --- Auth check ---
         const currentUser = localStorage.getItem('moodooCurrentUser');
         if (!currentUser) {
@@ -765,7 +824,6 @@
         // --- Nav links ---
         document.getElementById('openSearch')?.addEventListener('click', () => window.location.href = 'search.html');
         document.getElementById('openMessages')?.addEventListener('click', () => window.location.href = 'forum.html');
-        document.getElementById('openSettings')?.addEventListener('click', () => window.location.href = 'profile.html');
         document.getElementById('openHome')?.addEventListener('click', () => window.location.href = 'home.html');
 
         // --- Modal logic ---

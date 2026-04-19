@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moodoo - Přihlášení</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
- @import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
         :root {
             --bg: #090909;
             --panel: rgba(0, 0, 0, 0.74);
-            --accent: #e50914;
+            --accent: #D44543;
             --text: #ffffff;
             --text-muted: #cccccc;
             --border: rgba(255, 255, 255, 0.12);
@@ -26,7 +27,10 @@
 
         body {
             min-height: 100vh;
-            background: linear-gradient(180deg, #121212 0%, #050505 100%);
+             content: '';
+            background: linear-gradient(180deg, #12161A, rgba(0, 0, 0, 0.9)),
+                url('images/image\ 21.png') center/cover no-repeat;
+            background-repeat: no-repeat;
             color: var(--text);
             display: flex;
             justify-content: center;
@@ -34,29 +38,11 @@
             padding: 24px;
         }
 
-        .login-shell {
-            width: min(980px, 100%);
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 32px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-            border: 1px solid var(--border);
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 40px 120px rgba(0,0,0,0.45);
-        }
-
-        .hero-panel {
-            position: relative;
-            padding: 48px;
-            background: url('https://images.unsplash.com/photo-1517604931442-7be35fbc83d2?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
-        }
-
         .hero-panel::after {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.92));
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.92));
         }
 
         .hero-panel .hero-copy {
@@ -77,16 +63,18 @@
         }
 
         .hero-panel p {
-            color: rgba(255,255,255,0.82);
+            color: rgba(255, 255, 255, 0.82);
             line-height: 1.8;
             max-width: 380px;
         }
 
         .login-panel {
             padding: 48px;
-            background: var(--bg);
+            background: #12161A;
+            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.45);
             display: flex;
             flex-direction: column;
+            border-radius: 10px;
             gap: 24px;
         }
 
@@ -149,12 +137,13 @@
         .small-text {
             color: var(--text-muted);
             font-size: 0.95rem;
+            text-align: center;
         }
 
         .back-link {
             display: inline-block;
             margin-top: 16px;
-            color: rgba(255,255,255,0.75);
+            color: #DAA050;
             font-size: 0.95rem;
         }
 
@@ -203,14 +192,8 @@
         }
     </style>
 </head>
+
 <body>
-    <div class="login-shell">
-        <section class="hero-panel">
-            <div class="hero-copy">
-                <h1>Vítejte zpět</h1>
-                <p>Otevřete si svůj účet Moodoo a získejte přístup k nejlepším filmům a seriálům, které pro vás vybíráme každý den.</p>
-            </div>
-        </section>
 
         <section class="login-panel">
             <div>
@@ -225,7 +208,7 @@
                 <label for="password">Heslo</label>
                 <input id="password" type="password" placeholder="Heslo" required>
 
-                <button type="submit">Přihlásit</button>
+                <button type="submit">Přihlásit se</button>
                 <p class="message" id="message"></p>
             </form>
 
@@ -233,7 +216,6 @@
             <p class="small-text">Admin login: <strong>admin@moodoo.cz</strong> / <strong>moodoo123</strong></p>
             <a class="back-link" href="index.html">← Zpět na domovskou stránku</a>
         </section>
-    </div>
     <script>
         const storedUsersKey = 'moodooUsers';
         const defaultUsers = [
@@ -279,4 +261,5 @@
         });
     </script>
 </body>
+
 </html>

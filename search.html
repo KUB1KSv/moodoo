@@ -7,11 +7,12 @@
     <title>Moodoo Search</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
         :root {
             --bg: #050505;
             --panel: rgba(18, 18, 18, 0.96);
-            --accent: #e53935;
+            --accent: #D44543;
             --muted: #a8a8a8;
             --text: #fff;
             --border: rgba(255, 255, 255, 0.12);
@@ -34,6 +35,14 @@
             background: linear-gradient(180deg, #090909 0%, #030303 100%);
             color: var(--text);
             display: flex;
+          content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(180deg, #12161A, rgba(0, 0, 0, 0.9)),
+                url('images/image\ 21.png') center/cover no-repeat;
+            z-index: -1;
+            background-repeat: no-repeat;
+
         }
 
         /* ── SIDEBAR ── */
@@ -83,7 +92,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            right: auto;    
+            right: auto;
             padding-left: 20px;
         }
 
@@ -332,19 +341,30 @@
 <body>
 
     <!-- SIDEBAR -->
-        <aside class="sidebar">
+    <aside class="sidebar">
         <nav class="nav-menu">
             <div class="nav-item active" id="openSearch">
-                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
             </div>
             <div class="nav-item" id="openHome">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
             </div>
             <div class="nav-item" id="openMessages">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
             </div>
             <div class="nav-item" id="openSettings">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
             </div>
         </nav>
     </aside>
@@ -437,7 +457,7 @@
             }
         });
 
-                document.getElementById('openSearch')?.addEventListener('click', () => {
+        document.getElementById('openSearch')?.addEventListener('click', () => {
             window.location.href = 'search.html';
         });
 
@@ -448,8 +468,8 @@
         document.getElementById('openSettings')?.addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
-        
-           document.getElementById('openHome')?.addEventListener('click', () => {
+
+        document.getElementById('openHome')?.addEventListener('click', () => {
             window.location.href = 'home.html';
         });
     </script>

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="cs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Město v rytmu tlapek</title>
+    <style>
+        /* Moodoo Color Palette & Basics */
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #0d0d0d;
+            /* Hlubší černá */
+            color: #b3b3b3;
+            /* Šedý text jako v FAQ */
+        }
+
+        #game-container {
+            background: transparent;
+            /* Moodoo často používá čisté pozadí */
+            padding: 20px;
+        }
+
+        h1 {
+            color: #D44543;
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 50px;
+            font-weight: 600;
+        }
+
+        #text {
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            white-space: pre-line;
+            text-align: left;
+        }
+
+        /* Styl pro otázky/nadpisy ve stylu Moodoo "Pill" */
+        .section-header {
+            display: inline-block;
+            border: 1px solid #D44543;
+            color: #ffffff;
+            padding: 5px 25px;
+            border-radius: 50px;
+            /* Kulaté rohy pro nadpis */
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Časomíra */
+        #timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #D44543;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(183, 28, 28, 0.5);
+        }
+
+        /* Tlačítka voleb ve stylu Moodoo karet */
+        .choice-btn {
+            display: block;
+            width: 100%;
+            margin: 20px 0;
+            padding: 20px;
+            cursor: pointer;
+            background: #1a1a1a;
+            /* Tmavé pozadí karty */
+            color: #ffffff;
+            border: 2px solid #D44543;
+            /* Nenápadný okraj */
+            border-left: 4px solid #D44543;
+            /* Výrazný červený akcent vlevo */
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            border-color: #DAA050;
+            background: #252525;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Hlavní akční tlačítko (Decision) */
+        .action-btn {
+            background: #433629;
+            color: #ffffff;
+            padding: 16px;
+            width: 50%;
+            border: 3px solid #DAA050;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            text-transform: none;
+            font-size: 0, 8rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+            display: block;
+            /* Zajistí, že tlačítko zabere celý řádek */
+            margin: 20px auto 0;
+            /* 20px nahoře, AUTO po stranách (vycentruje), 0 dole */
+        }
+
+        .action-btn:hover {
+            background: #695742;
+            /* Mírné zesvětlení při najetí */
+            transform: scale(1.02);
+            /* Jemné zvětšení */
+            box-shadow: 0 0 15px rgba(218, 160, 80, 0.4);
+            /* Zlatavá záře při hoveru */
+        }
+
+
+        /* Konec hry */
+        .end-message {
+            text-align: center;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+            background: rgba(183, 28, 28, 0.05);
+        }
+
+        .end-message h2 {
+            color: #DAA050;
+            margin-top: 0;
+        }
+
+        .restart-btn {
+            background: transparent;
+            color: #D44543;
+            border: 1px solid #D44543;
+            padding: 10px 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .restart-btn:hover {
+            background: #D44543;
+            color: white;
+        }
+
+        /* Kontejner pro celou obrazovku konce/čekání */
+        .moodoo-screen {
+            text-align: center;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .moodoo-status-text {
+            font-size: 1rem;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        .moodoo-status-text b,
+        .moodoo-status-text span {
+            color: #DAA050;
+        }
+
+        /* Hlavní karta s červeným okrajem */
+        .moodoo-card {
+            background-color: #241a1a;
+            border: 2px solid #d93838;
+            border-radius: 8px;
+            padding: 30px 20px;
+            width: 280px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .moodoo-card svg {
+            margin-bottom: 15px;
+        }
+
+        .moodoo-card-label {
+            color: #999;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .moodoo-card-title {
+            color: #DAA050;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .moodoo-card-subtitle {
+            color: #ccc;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        .moodoo-card-link {
+            color: #DAA050;
+            font-size: 0.9rem;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Moodoo tlačítko */
+        .moodoo-btn {
+            background-color: #362f27;
+            color: #fff;
+            border: 3px solid #DAA050;
+            border-radius: 40px;
+            font-size: 1rem;
+            padding: 10px 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+        }
+
+        .moodoo-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="game-container">
+        <h1>Město v rytmu tlapek</h1>
+        <div id="text">Načítání příběhu...</div>
+        <div id="choices"></div>
+    </div>
+    <div id="timer">10</div>
+
+    <script>
+        const storyNodes = {
+            uvod: {
+                text: `Město večer chutná jako kov, ozón a příslib blížící se bouřky, která visí nízko nad střechami domů. Vzduch je těžký, nasycený vlhkostí, ale pro tebe je to to nejlepší palivo. Tvůj dech je pravidelný, hluboký a kovový, přesně synchronizovaný s rytmickými údery tvých tenisek o hrubý asfalt chodníku. Každý krok cítíš až v páteři – je to čistý, mechanický pohyb, který tě zbavuje všech starostí dne.
+                    Vedle tebe, v dokonalém polostinu pouličních lamp, kluše Max. Je to velký kříženec s hrudníkem atleta a nekonečnou zásobou energie, která jako by se s každým kilometrem jen doplňovala. Jeho srst v záři oranžových výbojek hází stříbrné odlesky a jeho svaly pod kůží pracují s fascinující lehkostí. Tohle je váš posvátný moment, rituál, který patří jen vám dvěma. Svět kolem vás přestal existovat jako soubor budov a ulic; proměnil se v rozmazanou šmouhu neonových světel z kaváren, mihotavých výloh a protijedoucích aut, jejichž světlomety krájí tmu jako žiletky.
+                    „Ještě kousek, Maxíku, už budeme u parku,“ vydechneš do chladnoucího vzduchu a tvůj hlas se mísí se šumem města. Pes v odpověď radostně štěkne, krátce a energicky, aniž by vypadl z tempa. V tu chvíli se cítíš neporazitelně, jako bys dokázal běžet až na konec světa, poháněn jen touhle syrovou energií.
+                    Jenže pak se před vámi otevře prostor křižovatky u Hlavní třídy. Je to skutečná tepna města, monstrózní asfaltový uzel, kde doprava neustále pulzuje jako splašená krev v žilách unaveného obra. Z dálky slyšíš dunění motorů a skřípění brzd. Upřeš oči na semafor. Vidíš tu malou zelenou postavičku, která právě začíná nervózně blikat.
+                    V hlavě ti okamžitě naskočí vnitřní stopky. Máš maximálně dvě vteřiny na rozhodnutí. Tvůj mozek vyhodnocuje vzdálenost, rychlost a únavu v nohách – “Stihnu to?” Jenže Max je v tu chvíli o půl metru napřed, vybičovaný společným tempem a soustředěný jen na cestu před sebou.
+                    Vteřina jedna: tvoje tělo se napíná k poslednímu skoku. Vteřina dvě: malý panáček na semaforu zhasne a vystřídá ho neúprosná, krvavě rudá barva.
+                    Červená naskočí přesně v milisekundě, kdy Maxovy přední tlapky dopadnou na bílou barvu přechodu. Svět kolem jako by na moment zamrzl v tichu, které vzápětí roztrhne brutální realita velkoměsta. Zleva, jen pár metrů od vás, se ozve hladové túrování motoru těžkého černého SUV. Řidič má zelenou, nudu v očích a nohu na plynu. Auto sebou trhne vpřed právě ve chvíli, kdy se Max chystá k dalšímu odrazu přímo do jeho dráhy.
+`,
+                choices: [
+                    { text: "A) Běžet dál", nextNode: 'bezet_dal' },
+                    { text: "B) Zastavit a čekat", nextNode: 'zastavit' },
+                    { text: "C) Škubnout vodítkem", nextNode: 'skubnout' }
+                ]
+            },
+            bezet_dal: {
+                text: `Adrenalin ti vystřelí do žil jako elektrický proud. Vteřina se natáhne do nekonečna. Mozek ti bleskově vypočítá jedinou šanci: pokud teď zastavíš, Maxe neudržíš a on skončí pod koly. Pokud ale zrychlíš, možná, jen možná, proletíte tou smrtící zónou dřív, než vás SUV smete.
+                    „Sakra, Maxi, makej!“ zařveš tak silně, až tě pálí v krku.
+                    Místo abys brzdil, vrazíš veškerou zbývající energii do stehen. Tvoje tenisky doslova vybuchnou na asfaltu. Skočíš vpřed, nataženou pravicí pevně svíráš rukojeť vodítka a levou rukou se snažíš Maxe popohnat. Cítíš, jak se ti svaly napínají k prasknutí.
+                    Max, vybičovaný tvým řevem a náhlým nárůstem tempa, vyrazí jako šíp. Cítíš horko sálající z chladiče toho černého kolosu. Slyšíš to zlověstné zasyčení pneumatik, jak řidič v poslední setině vteřiny dupne na brzdu. Světlomety SUV ti ozáří bok tak silně, že na zlomek sekundy nevidíš nic než bílou tmu.
+                    TÚÚÚÚÚÚÚÚÚÚT!
+                    Ten zvuk je ohlušující. Je v něm všechno – vztek, leknutí i smrtelná hrozba. Cítíš tlakovou vlnu vzduchu, jak auto zastavuje jen pár centimetrů od tvé paty. Je to tak blízko, že cítíš pach spálené gumy a prach z brzdových destiček.
+                    Doskočíte na druhou stranu přechodu. Tvoje plíce hoří, v uších ti buší krev a nohy se ti třesou jako osiky. Max se zastaví, ohlédne se a zmateně zamrtá ocasem. Nechápe, co se právě stalo, cítí jen tvůj strach a vzrušení.
+                    Zastavíš se a opřeš se rukama o kolena, abys neupadl. Černé SUV tam stále stojí, uprostřed křižovatky, jako obří kovová bestie. Okénko u řidiče se pomalu spouští dolů. Vyhlédne z něj muž s rudým obličejem, žíly na krku mu nabíhají.
+                    „Seš normální?!“ zařve na celou ulici. „Moh’ jsem vás oba zabít, ty blázne! Co si jako myslíš?!“
+                    Lidé na zastávce opodál se otáčejí. Cítíš na sobě jejich pohledy – některé odsuzující, jiné vyděšené. Máš v sobě tolik nahromaděného napětí, že se ti chce buď brečet, nebo na něj začít řvát taky.
+`,
+                choices: [
+                    { text: "A) Ukázat na něj prostředníček", nextNode: 'gesto' },
+                    { text: "B) Omluvit se a zmizet", nextNode: 'omluva' },
+                    { text: "C) Prostě běžet dál", nextNode: 'utek' }
+                ]
+            },
+            gesto: {
+                text: `Hněv v tobě vyvře jako láva. Vteřina, kdy jsi mohl jen sklonit hlavu a odejít, je pryč. Adrenalin, který ti měl pomoci utéct, se teď transformoval do čisté, nekontrolované agrese. Máš pocit, že celý svět je proti tobě a tohle černé SUV je jeho symbolem.
+                „Měl jsi vidět, že tam jsme, ty kreténe! Jel jsi jako naprostý hovado!“ zařveš tak silně, až ti naskočí žíla na spánku. Uděláš dva rázné kroky směrem k autu, ruku sevřenou v pěst.
+                Řidič, chlap v drahém obleku, kterému právě strach o vlastní lak přerostl v aroganci, práskne dveřmi a vystoupí. „Co jsi to řekl, ty harante?! Červená ti nic neříká?“ křičí a kráčí k tobě. Situace vře. Lidé na zastávce vytahují mobily, cítíš se jako v aréně.
+                Max vycítí napětí. Naježí se a začne hluboce, výhružně vrčet. To tě vyprovokuje ještě víc. Místo abys situaci uklidnil, zastavíš se, narovnáš se a s pohrdavým úšklebkem zvedneš ruku přímo před jeho obličej.
+                Vztyčíš prostředníček. Pomalu, provokativně, s ledovým klidem v očích.
+                „Tady máš odpověď,“ procedíš mezi zuby.
+                Tím jsi ale překročil neviditelnou čáru. Řidič zrudne, ale než stihne cokoli udělat, ozve se ostré syknutí brzd. Hned vedle vás zastavuje bílo-modré auto s majáky. Městská policie. Byli hned za rohem.
+                Strážníci vyskakují z auta. Scéna je jasná: uprostřed křižovatky blokuje provoz SUV, u něj stojí nepříčetný řidič a naproti němu ty – s agresivním psem a vulgárním gestem, které stále visí ve vzduchu.
+                „Občanský průkaz, hned!“ zahřmí policista.
+                Tvoje hrdinství se během vteřiny vypaří. Musíš strávit další hodinu vysvětlováním, proč jsi vběhl na červenou a proč jsi vyvolal konflikt. Řidič sice dostane domluvu za rychlou jízdu, ale ty odcházíš s tučnou pokutou za ohrožení provozu a neukázněné chování.
+                Domů se vracíš pěšky, s prázdnou peněženkou a pachem ostudy. Max jde se sklopenou hlavou, jako by cítil tvoji porážku. Dnešní běh neměl vítěze. Jen tvůj vztek, který tě stál víc, než jsi byl ochoten zaplatit.
+                `,
+                endTitle: "--- ALTERNATIVNÍ KONEC #1: Fakáč! ---",
+                choices: []
+            },
+            omluva: {
+                text: `Hlasitý křik řidiče se ti zařezává do uší jako cirkulárka. Cítíš, jak se ti třesou ruce. První instinkt ti radí zařvat na něj něco stejně hnusného, ale když se podíváš na Maxe, vidíš, jak se pes tiskne k tvé noze. Je vyděšený. Ten hluk, troubení a tvoje agrese by ho jen víc rozhodily.
+                Polkneš žluč, která se ti drala do hrdla. Zvedneš volnou ruku v tichém, upřímném gestu omluvy.
+                „Promiňte! Moje chyba!“ křikneš směrem k autu. Tvůj hlas zní trochu přiškrceně, jak se snažíš popadnout dech. Nečekáš na jeho reakci, ani na to, jestli tě dál bude častovat nadávkami. Prostě skloníš hlavu, pevněji stiskneš vodítko a co nejrychleji odtáhneš Maxe pryč z té záře reflektorů, do milosrdného stínu parku, který začíná hned za rohem.
+                Jakmile pod nohama ucítíš místo asfaltu měkkou mlatovou cestu, konečně se zastavíš. Max si sedne na trávu a začne se olizovat, jako by ze sebe chtěl ten stres smýt. Ty se opřeš zády o kmen starého dubu a pomalu vydechuješ. Srdce ti v hrudi tluče jako uvězněný pták.
+                „Teda, vy si taky koledujete o infarkt,“ ozve se najednou z lavičky kousek od tebe klidný, lehce pobavený ženský hlas.
+                Trhneš sebou a podíváš se tím směrem. Ve světle vzdálené lampy sedí Lucka, tvoje kamarádka, kterou jsi neviděl snad celou věčnost. Vedle ní leží rozevřená kniha a v ruce drží kelímek s kávou.
+                `,
+                choices: [{ text: "Sednout si k ní", nextNode: 'sednout' },
+                { text: "Pozvat ji na kafe", nextNode: 'kafe' }
+                ]
+            },
+            utek: {
+                text: `V uších ti duní vlastní tep a nadávky řidiče slyšíš jen jako vzdálený, nepodstatný šum. Tvoje tělo je v šoku, přepnuté do nejzákladnějšího režimu: přežít a zmizet. Nechceš slyšet jeho hněv, nechceš vidět ty odsuzující pohledy lidí na zastávce. Potřebuješ ten pocit nebezpečí nechat za sebou.
+                „Pojď, Maxi!“ vyrazíš znovu do běhu.
+                Tvoje nohy, ačkoliv se ještě před chvílí třásly, teď pracují jako stroje. Max, zmatený tou náhlou vlnou napětí, běží těsně u tvého boku. Kličkujete mezi chodci, probíháte úzkou uličkou kolem starého kina a míříte do hloubi městského parku, kde světla ubývá a ticho narůstá.
+                Běžíš takhle dalších deset minut. Plíce tě pálí, jako bys vdechoval střepy, a v boku tě nepříjemně píchá. Konečně, u dřevěného altánu uprostřed tiché části parku, se zastavíš. Předkloníš se, ruce si opřeš o stehna a lapáš po dechu.
+                „Panebože... to bylo... o fous,“ soukáš ze sebe mezi jednotlivými nádechy.
+                „O fous? Vypadáš, jako bys právě utekl z vlastní popravy,“ ozve se najednou kousek od tebe známý, klidný hlas.
+                Zvedneš hlavu. Na lavičce u altánu sedí Lucka. Má na sobě běžeckou bundu a vedle ní na zemi leží otevřená láhev s vodou. Vypadá to, že si tu taky dávala pauzu. Dívá se na tebe se směsicí pobavení a opravdové starosti.
+                „Luci?“ vydechneš překvapeně. „Co tu... co tu děláš?“
+                „Dneska jsem si řekla, že vyčistím hlavu po tom příšerném dni v práci,“ usměje se Lucka a poklepe na místo vedle sebe. „Ale ty vypadáš, že tu hlavu máš spíš v plamenech. Sedni si, než sebou sekneš. Max už vypadá, že to za tebe vzdal.“
+                `,
+                choices: [{ text: "Sednout si k ní", nextNode: 'sednout' },
+                { text: "Jen zamávat a pokračovat", nextNode: 'jit_dal' }
+                ]
+            },
+            zastavit: {
+                text: `„MAXI, STŮJ!“ zařveš a vší silou se zapřeš patami o drsný asfalt.
+                Tvé tělo funguje jako kotva. Max, i když už byl předními tlapkami na přechodu, cítí tvůj prudký stop a poslušně se stáhne zpět na obrubník. V tu samou sekundu kolem vás prosvype černé SUV. Cítíš ten poryv horkého vzduchu a prachu, jak těsně míjí Maxův čumák. Kdybys neudělal tenhle krok zpět, ten večer by skončil krví.
+                Stojíš tam, srdce ti buší až v krku a sleduješ, jak se na semaforu neúprosně drží červená. Max si sedne, podívá se na tebe svýma hnědýma očima a olízne si čumák, jako by chtěl říct: „To bylo o fous, co?“
+                „Teda, vy si taky koledujete o infarkt,“ ozve se najednou kousek od tebe klidný, lehce pobavený ženský hlas.
+                Trhneš sebou a ohlédneš se. U zábradlí kousek od přechodu stojí Lucka. Tvoje spolužačka, kterou jsi neviděl snad celou věčnost. Má na sobě běžeckou bundu, v uších sluchátka stažená kolem krku a v ruce drží kelímek s kávou, ze kterého se ještě kouří. Vypadá to, že tu taky čeká na zelenou, nebo se jen zastavila, aby nabrala dech.
+                „Luci?“ vydechneš překvapeně a konečně povolíš křečovité sevření vodítka. „Skoro jsi mě nepoznala, co? V tomhle světle a v tomhle sprintu...“
+                „Poznala jsem spíš Maxe,“ usměje se a ukáže na psa. „Ten tvůj styl běhu je pořád stejně urputný. Ale vážně, skoro jsi tam vlítnul. Máš štěstí, že máš tak chytrého psa, který tě poslechne na slovo.“
+                Stojíte tam, zatímco město kolem vás pulzuje. Červená na semaforu jako by tam byla schválně, aby vám dala pár vteřin času navíc. Adrenalin z tebe pomalu vyprchává a nahrazuje ho nečekaná radost z toho, že vidíš někoho známého.
+                `,
+                choices: [{ text: "Pozvat ji na kávu", nextNode: 'kafe' },
+                { text: "Pozvat ji na společný běh", nextNode: 'beh' },
+                { text: "Rozloučit se", nextNode: 'rozloucit' }]
+            },
+            skubnout: {
+                text: `Instinkt je rychlejší než myšlenka. Když vidíš, jak se ta černá masa SUV dává do pohybu, tvé tělo zareaguje samo. Vší silou, kterou v sobě máš, trhneš pravou paží dozadu. Chceš Maxe doslova vyrvat ze spárů smrti, i kdyby mu to mělo vyrazit dech.
+                Jenže fyzika je neúprosná. Tvůj protitah narazí na Maxovu dopřednou energii a váhu jeho těla. Ozve se ostré, suché PRASK!
+                Vteřinu ti trvá, než pochopíš, co se stalo. V ruce držíš jen lehkou plastovou rukojeť s kusem utrženého nylonového popruhu. Stará karabina nebo unavený šev nevydržely ten šílený nápor. Max cítí, jak tlak na krku náhle zmizel. Ten nečekaný zvuk a tvoje prudké gesto ho vyděsí k smrti.
+                SUV projede těsně kolem něj, pneumatiky jen centimetry od jeho zadních tlapek. Max v panice uskočí, ale ne k tobě. Vyběhne šikmo přes křižovatku, pryč od toho řvoucího motoru, pryč od nebezpečí.
+                „MAXI, STŮJ!“ zařveš, až tě pálí v plicích.
+                Ale pes tě neslyší. Je v režimu přežití. Vidíš jen jeho siluetu, jak kličkuje mezi lidmi na protějším chodníku. Zmizí v labyrintu uliček staré čtvrti. Stojíš tam s kusem prasklého vodítka v ruce, zatímco doprava kolem tebe znovu pulzuje, jako by se nic nestalo.
+                Vyběhneš za ním. Srdce ti buší až v krku. Každá vteřina je drahá. Doběhneš na roh, kde jsi ho viděl naposledy. Ulička se tu dělí. Je tu tma, jen pár pouličních lamp vrhá dlouhé, zkreslené stíny.
+                Zastavíš se a nasloucháš. Musíš se soustředit. Pak si toho všimneš – kousek od tebe, u stěny starého skladiště, stojí zářivě modrý plechový sud. Vedle něj je v kaluži čerstvý, rozstříknutý otisk mokré tlapky směřující hlouběji do tmy. Max tudy proletěl jako blesk.
+                Doběhneš k dalšímu větvení uliček. Tady se město mění v nečitelnou mapu betonových zdí a plechových plotů. Musíš se rozhodnout, kudy dál, než se stopa úplně ztratí.
+                `,
+                choices: [{ text: "Vydat se doleva:", nextNode: 'doleva' },
+                { text: "Vydat se doprava", nextNode: 'doprava' }]
+            },
+
+            doleva: {
+                text: `Vyběhneš z průchodu a tvé oči pátrají v záři vysokých pouličních lamp. Nábřeží je tu široké, otevřené a plné hluku z blízkého mostu. Vidíš skupinky lidí, slyšíš smích od venkovních stolků barů a dunění projíždějících tramvají.
+                „Maxi!“ křičíš do toho chaosu, ale tvůj hlas se tříští o betonové zdi.
+                Zastavíš se u modrého kontejneru a rozhlédneš se. Nic. Žádný pohyb v dálce, žádné cinkání známky. Jen lhostejné tváře kolemjdoucích, kteří se starají o své vlastní životy. V tu chvíli ti to dojde. Ty mokré stopy u modrého sudu nemířily sem do světla. Max hledal ticho, ne tenhle hluk, který mu připomínal tu děsivou křižovatku. Udělal jsi chybu.
+                Otočíš se a sprintuješ zpátky k tomu rozcestí, ale město už mezitím ožilo večerním provozem. Uličky vypadají jinak, stíny se protáhly a stopa vychladla.
+                Hledáš ho celou noc. Tvé tenisky jsou promočené od ledové rosy a špinavé od bláta z parkových cest, hlas máš vykřičený do bolestivého chraptění a nohy tě sotva nesou, ale tlukot tvého srdce ti nedovolí zastavit. Každý vzdálený stín, který se pohne v průjezdu, každé šustnutí pytle s odpadky v tobě na zlomek vteřiny zažehne plamen naděje, který vzápětí zhasne jako mokrá zápalka. Projdeš každou uličku, nahlédneš pod každé zaparkované auto, kde by se mohl schovávat, oslovíš každého nočního chodce i rozespale vypadající bezdomovce. Nikdo ho neviděl. Velký šedý pes s kusem utrženého vodítka jako by se prostě vypařil do černého, lhostejného svědomí města.
+                Když se nad ostrými hranami střech začne konečně objevovat šedivé, nehostinné světlo úsvitu, tvé kroky tě podvědomě dovedou k řece. Stojíš na stejném betonovém mole, kde mohl být, kdybys včera večer zahnul doprava. Voda je klidná, ocelově chladná a mlčenlivá. Na zemi, hned u rezavého drátu vyčnívajícího ze zdi, leží malý, špinavý útržek modrého nylonu. Musel se tu zachytit, když tudy Max v nepříčetné panice probíhal dál, slepě a bezhlavě, hlouběji do neznáma, kam už tvůj hlas nedosáhl.
+                Zvedneš ten kousek látky. Ještě je trochu vlhký a v jeho struktuře je zapletený jediný krátký šedý chlup. Je to všechno, co ti z něj zbylo. Tvoje dlaně se sevřou v pěst tak silně, až ti zbělejí klouby, ale uvnitř cítíš jen děsivé, ledové prázdno.
+                Domů se vracíš v ranním tichu, které tě bolí víc než jakýkoliv křik. Každý tvůj krok se rozléhá prázdnou ulicí jako obžaloba. Otevřeš dveře bytu a poprvé za celé ty roky tě nepřivítá radostné, rytmické bušení ocasu o podlahu ani nadšené kňučení. Je tu ticho. Takové to husté, těžké ticho, které se ti usazuje v plicích a nedovolí ti pořádně vydechnout.
+                V předsíni stále leží jeho miska s vodou, ve které plave pár smítek prachu. Na gauči, tam, kde se včera ráno vyvaloval, když byl svět ještě v pořádku, vidíš pár zapomenutých šedých chlupů. Svléknout si běžeckou bundu ti připadá jako nadlidský úkol. Klesneš na kolena přímo v předsíni na studenou dlažbu, do dlaně sevřeš ten prázdný, špinavý zbytek vodítka a přitiskneš si ho k obličeji. Stále ještě slabě cítíš jeho pach – směs psího šamponu, deště a domova.
+                Právě teď ti dochází ta strašná, definitivní pravda. Udělal jsi jedno jediné špatné rozhodnutí v jedné jediné vteřině života a město, ta kovová bestie bez srdce, ti ho už nikdy nevrátí. Venku za oknem začíná nový den, lidé spěchají do práce, slunce se opírá do fasád domů, ale pro tebe zůstal čas stát na té křižovatce u Hlavní třídy. Tam, kde se vteřinovým trhnutím přetrhlo mnohem víc než jen kus nylonového provazu.
+                Tento příběh končí bez štěkotu. Jen s útržkem modré látky v dlani a tichem, které už nikdy nikdo nevyplní.
+                `, endTitle: "--- ALTERNATIVNÍ KONEC #6: Maxi... ---",
+                choices: []
+            },
+            doprava: {
+                text: `Zvolíš cestu vpravo. Instinkt ti napovídá, že Max, zahnán do úzkých hlukem a světly křižovatky, bude hledat ticho a úkryt. Vrhneš se do úzkého průchodu mezi činžáky, kde vzduch voní starým zdivem a vlhkostí. Tvoje kroky na dlažebních kostkách zní nepřirozeně hlasitě.
+                „Maxi!“ zkusíš zavolat, ale tvůj hlas se jen bezmocně odrazí od vysokých zdí.
+                Proběhneš kolem řady popelnic a starého rezavého bicyklu opřeného o zeď. Pak se prostor náhle otevře. Před tebou se rozprostře betonové molo, zapomenutý kousek nábřeží, který město už dávno přestalo používat. Světlo z protějšího břehu se líně láme o hladinu řeky, která tu tiše hučí jako hluboký tón v tichu noci.
+                A tam ho uvidíš.
+                Max stojí na samém okraji mola. Utržený kus vodítka, ten zbytek nylonu, který mu zbyl na obojku, se zachytil o vyčnívající kus starého železa v betonu. Pes je uvězněný na metr dlouhém laně, s čumákem jen kousek od černé vody. Celý se klepe. Každý sval v jeho těle je napnutý k prasknutí. Když uslyší tvůj dech, prudce otočí hlavu, ale zůstane přikrčený k zemi.
+                Zastavíš se pět metrů od něj. Srdce ti buší v uších, pálí tě v boku a cítíš, jak se v tobě mísí bezmezná úleva s dozvuky šíleného strachu, který tě hnal městem.
+                Teď je to na tobě. Jedna vteřina, která rozhodne o tom, jak tenhle večer skončí.
+                `,
+                choices: [{ text: "Pomazlit ho", nextNode: 'pomazlit2' },
+                { text: "Vynadat mu", nextNode: 'vynadat2' }]
+            },
+            pomazlit2: {
+                text: `Uděláš několik opatrných kroků. Beton pod nohama klouže a z řeky táhne chlad, ale ty vnímáš jen Maxe. On se na tebe ohlédne, v očích má pořád ještě ten divoký, zvířecí děs, ale jakmile spatří tvou tvář, napětí v jeho těle povolí. Klesne na tlapky, jako by z něj vyprchaly všechny kosti, a začne se nekontrolovaně třást.
+                „Už je dobře, kluku. Už tě mám,“ zašeptáš, i když máš hrdlo stažené tak, že sotva dýcháš.
+                Padneš na kolena přímo do studeného nábřežního prachu a přitáhneš si ho k sobě. Max ti zaboří hlavu do ramene a ty cítíš, jak mu pod kůží zběsile buší srdce – je to stejný rytmus, jaký tepe v tvých spáncích. Voní mokrou srstí, asfaltem a strachem. Objímáš ho tak silně, že bys ho nejraději vpil do sebe, aby ho už nikdy žádný zvuk ani stín nemohl vyplašit. V tu chvíli ti dojde, že tvůj hněv byl jen maskou pro paralyzující strach ze ztráty. Nad vámi duní most a město dál žije svůj lhostejný život, ale tady, na okraji světa, existuje jen tohle tiché, znovunalezené bezpečí. Po tváři ti steče jedna slza úlevy, kterou smyje první kapka blížící se bouřky.
+                `, endTitle: "--- ALTERNATIVNÍ KONEC #4: Zaplať pán bůh ---",
+                choices: []
+            },
+            vynadat2: {
+                text: `„Co jsi to sakra udělal?!“ vybuchneš. Tvůj hlas se jako bič odrazí od kamenných zdí skladišť a Max se přikrčí k zemi, jako bys ho fyzicky uhodil.
+                Všechno to napětí z křižovatky, ten syrový děs z rozjetého SUV a šílený sprint tmavými uličkami se v tobě přelije v ledový, nespravedlivý hněv. „Víš, co se mohlo stát? Mohl jsi skončit v kusech na asfaltu! Mohl ses utopit v týhle černý břečce!“ křičíš a prudce popadneš zbytek utrženého vodítka, který se zasekl o rezavé železo.
+                Max ticho zakňučí a bázlivě se plazí u tvých nohou, břichem tře o beton. Vidíš v jeho očích, že tě teď vnímá jako další hrozbu, ne jako záchranu. Tvůj hněv tě sice na moment zahřeje, ale vzápětí tě vystřídá mrazivá prázdnota. Vyhrál jsi tuhle bitvu o autoritu, ale v tichu nábřeží slyšíš, jak se něco mezi vámi definitivně zlomilo.
+                Cesta domů připomíná pochod viny. Max kráčí se sklopenou hlavou, uši stažené dozadu, a pokaždé, když kovová karabina cinkne o obojek, lehce sebou cukne. Ty jdeš vedle něj se sevřenými čelistmi, ale s každým krokem cítíš, jak tě pohlcuje stud. Když konečně doma cvakne zámek, Max se ani neotočí pro pohlazení. Bez jediného pohledu zaleze do nejtmavšího kouta pod stůl. Sedneš si do tmy v kuchyni, v uších ti pořád zní tlukot tvého srdce a dojde ti krutá pravda: sice jsi ho přivedl domů, ale na tom břehu jsi nechal tu nejdůležitější věc – jeho bezmeznou důvěru. Venku se konečně spustí bouřka a spláchne prach z ulic, ale tvé svědomí zůstává těžké.
+                `, endTitle: "--- ALTERNATIVNÍ KONEC #5: To se ti moc nepovedlo ---",
+                choices: []
+            },
+            jit_dal: {
+                text: `Lucka se na tebe tázavě dívá, její pohled je plný nevyslovených otázek, ale ty jen v rychlosti zamáváš volnou rukou. „Promiň, Luci, musíme to rozchodit! Jsme v pohodě!“ vyhrkneš, i když se ti hlas třepe. Jsi tak mimo, paralyzovaný dozvukem toho šoku na křižovatce, že si ani nevšimneš, jak křečovitě svíráš plastovou rukojeť vodítka. Chceš být co nejdřív pryč, schovat se před lidmi, před světlem lamp i před vlastní vinou.
+                Jenže v ten moment se stane několik věcí naráz. Z dálky se ozve další hlasité zatroubení, doprovázené ostrou ranou – možná petarda, kterou někdo předčasně odpálil v uličkách. Max, už tak vystresovaný a naježený, sebou nekontrolovaně škubne směrem od zdroje hluku. Ty, s dlaněmi zpocenými od běhu a šoku, neudržíš rukojeť.
+                Vodítko ti proklouzne mezi prsty jako živé. „Maxi, stůj!“ zařveš, ale ten zvuk jen přidá na jeho panice. Je pozdě.
+                Pes, poháněný čistým instinktem „uteč nebo zemři“, vystřelí hlouběji do parku. Slyšíš jen zběsilé pleskání jeho tlapek o mokrou hlínu a kovové cinkání známky na obojku, které se s každou vteřinou vzdaluje. Lucka vyskočí z lavičky, její kelímek s kávou se převrhne na zem, ale Max už zmizel v neproniknutelné tmě mezi stromy.
+                Max nevidí nic než cestu před sebou. Proletí parkem jako šedý blesk, kličkuje mezi lavičkami a ignoruje vyděšené výkřiky pejskařů, které míjí. Vodítko za ním vlaje a při každém odrazu hlasitě mlátí o zem, což ho děsí ještě víc.
+                Vyběhne z parku na vedlejší ulici. Město ho pohlcuje. Světla výloh se odrážejí v jeho vyděšených očích. Přeskočí řadu zaparkovaných aut, prosmýkne se kolem skupinky lidí před barem a jeho drápy nepříjemně skřípou o dláždění. Pro něj to už není domov, je to labyrint zvuků a pachů, které ho chtějí polapit.
+                Ty běžíš za ním, plíce tě pálí jako v ohni. „Maxi! Stůj!“ tvoje volání se ale ztrácí v huku města. Vidíš ho jen na zlomek vteřiny, jak mizí v úzké uličce vedoucí k nábřeží. Tvoje nohy těžknou, ale strach tě žene dál.
+                Max vběhne na kamenné nábřeží. Tady už není kam utéct – před ním se otevírá jen prázdnota a hluboké, temné koryto řeky. Zastaví se až na samé hraně betonového mola. Teprve tady, kde město končí a začíná studený dech tekoucí vody, jeho úprk vyhasne.
+                Zůstane stát, hruď se mu zběsile zvedá a klesá. Dívá se na černou hladinu, ve které se líně pohupují odlesky městských neonů. Vodítko se mu nebezpečně zamotalo mezi kameny a on tam teď stojí – osamocený, bezbranný a úplně tichý.
+                Když ho konečně doběhneš a spatříš jeho siluetu proti světlu mostu, cítíš, jak se ti zastavuje srdce. Tady, na břehu řeky, kde se všechno zklidnilo, ti dochází, jak blízko jsi byl tomu, abys ho ztratil navždy.
+                `,
+                choices: [{ text: "Pomazlit ho", nextNode: 'pomazlit' },
+                { text: "Vynadat mu", nextNode: 'vynadat' }
+                ]
+            },
+            pomazlit: {
+                text: `Uděláš několik opatrných kroků. Beton pod nohama klouže, ale ty vnímáš jen Maxe. On se na tebe ohlédne, v očích má pořád ještě ten divoký, zvířecí děs, ale jakmile spatří tvou tvář, jeho svaly povolí. Klesne na tlapky a začne se třást.
+                „Už je dobře, kluku. Už tě mám,“ zašeptáš, i když se ti hlas láme.
+                Padneš na kolena přímo do studeného nábřežního prachu a přitáhneš si ho k sobě. Max ti zaboří hlavu do ramene a ty cítíš, jak mu pod kůží zběsile buší srdce. Voní mokrou srstí a městem. Objímáš ho tak silně, že bys ho nejraději vpil do sebe, aby už nikdy nemohl utéct. V tu chvíli ti dojde, že jsi na něj nemohl zaútočit nebo se hněvat – ten strach, který jsi cítil, byl jen odrazem toho, jak moc ho miluješ.
+                Když tě o pár minut později najde Lucka, uvidí tě, jak tam sedíš u černé vody, objímáš psa a po tváři ti stéká slza úlevy.
+                `,
+                endTitle: "--- ALTERNATIVNÍ KONEC #2: Uf! ---",
+                choices: []
+            },
+            vynadat: {
+                text: `„Co jsi to sakra udělal?!“ vybuchneš. Tvůj hlas se odrazí od kamenných zdí nábřeží a Max se přikrčí, jako bys ho uhodil.
+                Všechno to napětí z křižovatky, ten strach, že ho přejede auto, a ta šílená honička městem se v tobě přetaví v čistý hněv. „Víš, co se mohlo stát? Mohl jsi být pod koly! Mohl jsi se utopit!“ křičíš a prudce popadneš konec vodítka, který se zasekl mezi kameny.
+                Max kňučí a bázlivě se plazí u tvých nohou. Vidíš, že tě teď vnímá jako hrozbu, ne jako záchranu. Tvůj hněv tě sice na vteřinu zahřeje, ale vzápětí tě vystřídá ledový pocit prázdnoty. Vyhrál jsi tuhle hádku se psem, ale ztratil jsi tu jemnou nit důvěry, která mezi vámi celý večer byla.
+                Lucka, která právě doběhla, se zastaví pár kroků od tebe. Vidí tvou vztekem zkřivenou tvář a Maxův strach. „Hele, je v pořádku... to stačí,“ řekne tiše, ale v jejím hlase už není ta vřelost jako předtím na lavičce.
+                Cesta domů připomíná pohřební průvod. Max kráčí se sklopenou hlavou, uši stažené k dozadu, a pokaždé, když kovová karabina na vodítku cinkne, lehce sebou cukne – jako by čekal další příval tvého hněvu. Ty jdeš vedle něj se sevřenými čelistmi, v hlavě ti stále dokola tepe adrenalin a vztek, ale s každým krokem cítíš, jak tě pohlcuje stud. Lucka se s tebou rozloučila u parku jen krátkým, chladným kývnutím; viděla v tobě někoho, koho nepoznává. Když konečně doma cvakne zámek, Max se ani neotočí pro pohlazení. Zaleze si do nejvzdálenějšího kouta pod stůl a dívá se na tebe těma velkýma, smutnýma očima, ve kterých už není ta bezmezná důvěra, ale jen čistý strach. Sedneš si do tmy v kuchyni a dojde ti, že i když jsi ho zachránil před řekou, na tom břehu jsi ztratil něco mnohem důležitějšího. Některá slova už totiž nejde vzít zpátky.
+                `,
+                endTitle: "--- ALTERNATIVNÍ KONEC #3: Tos p*sral. ---",
+                choices: []
+            },
+            sednout: {
+                text: `„Luci? Já snad vidím přízrak,“ vydechneš a s úlevou, která hraničí s naprostým vyčerpáním, klesneš na druhý konec dřevěné lavičky. Max, tvůj věrný stín, se s hlubokým, teatrálním výdechem svalí k tvým nohám. Bradu si položí přímo na tvou levou tenisku, jako by se chtěl ujistit, že už se nikam nepoběží. „Vůbec jsem netušil, že se ještě v tomhle parku vyskytuješ. Myslel jsem, že jsi po státnicích zmizela někam do korporátního nebe,“ dodáš s pokusem o úsměv, který ti ještě trochu hyzdí křeč v obličeji.
+                Lucka zaklapne tlustou knihu v plátěné vazbě, jejíž název v šeru nestihneš přečíst, a usměje se. Je to ten stejný úsměv, který si pamatuješ z přednášek – trochu šibalský, trochu uklidňující. „Vyskytuju,“ odpoví klidně. „Jen jsem vyměnila ranní sprinty za večerní čtení. Moje kolena už ty tvoje vražedné intervaly odmítla tolerovat. Ale ty jsi očividně věrný svému tempu... i když tě málem stálo krk. Viděla jsem tě u té křižovatky. Vypadalo to, že chceš to SUV přepůlit silou vůle.“
+                „Byla to moje chyba,“ přiznáš bez obalu. Díváš se na své ruce položené na kolenou a pozoruješ, jak se ti konečně přestávají nekontrolovaně třást. Adrenalin je mizerný společník; nejdřív ti dá křídla a pak tě nechá se rozbít o realitu. „Někdy se prostě až moc soustředím na cíl. Na ta čísla na hodinkách, na tepovku, na tempo. Úplně zapomínám na to, co se děje metr přede mnou. Kdyby Max neuhnul, nevím...“
+                „Ale uhnul,“ skočí ti do řeči jemně. „A ty jsi zastavil. To je to jediné, na čem teď záleží.“
+                Následujících patnáct minut se parkem line váš rozhovor, který plyne tak přirozeně, jako byste ho jen včera přerušili. Lucka ti vypráví o své práci v grafickém studiu. Mluví o barvách, o vektorech a o klientech, kteří nevědí, co chtějí, ale chtějí to hned. Miluje tu práci, tu možnost tvořit něco z ničeho, ale přiznává, že daň je vysoká. „Trávím u monitoru dvanáct hodin denně. Moje oči vidí pixely i v polévce. Proto tyhle úniky sem. Potřebuju cítit skutečnou tmu, slyšet skutečné šustění listí a pít průměrnou kávu z automatu, která chutná po plastu, ale aspoň je hmatatelná.“
+                Ty jí na oplátku líčíš svůj život v běhu. Vyprávíš jí, jak tě Max, tenhle „pouliční mix všeho dobrého“, vycvičil v disciplíně víc než jakýkoliv trenér. „Když venku prší a mrzne, jemu je to jedno. Prostě si sedne ke dveřím a dívá se na mě tím pohledem, kterému nejde říct ne. Takže běžím. I když se mi nechce, i když jsem unavený. Ale jak jsi viděla, občas oba přeceníme své síly. On si myslí, že je nesmrtelný, a já mu to věřím.“
+                Smějete se stejným věcem jako kdysi. Ta známá dynamika, ten specifický druh humoru, který balancuje na hraně sarkasmu a hlubokého porozumění, tam stále jsou. Jsou sice trochu obroušené časem, možná trochu dospělejší a méně zbrklé, ale jádro zůstalo nedotčené. Je to zvláštní pocit – jako byste se neviděli jen týden a ne celé ty roky, které se mezi vás vklínily jako tichá řeka.
+                Sleduješ, jak si Lucka pohrává s prázdným papírovým kelímkem. Její prsty obkreslují jeho okraj a v dálce zabliká maják sanitky, který na moment osvětlí její tvář. Uvědomuješ si, že ti tenhle klid chyběl. Celé dny jen někam spěcháš, honíš se za termíny, za výsledky, za lepší verzí sebe sama, která je vždycky o kilometr dál. A teď tu sedíš na zablácené lavičce s holkou z minulosti a psem, co smrdí mokrou srstí, a cítíš se... v pořádku.
+                Tenhle náhodný moment, tahle vynucená zastávka uprostřed noci, je tisíckrát cennější než jakýkoliv zaběhnutý osobní rekord. Hodinky na tvém zápěstí tiše blikají a připomínají ti, že jsi zastavil trénink, ale ty poprvé v životě nemáš chuť je znovu spustit. Nechceš měřit čas. Chceš ho jen nechat plynout.
+                Lucka se podívá na svůj prázdný kelímek a pak na tebe. V jejích očích je otázka. Ne ta o tvém běhu, ale o tom, co bude dál. Uvědomuješ si, že se ti odsud vlastně vůbec nechce. Tma kolem vás houstne, město v dálce hučí jako vzdálený úl, ale tady pod starým dubem se zastavil svět.
+                „Víš,“ řekneš tiše, zatímco hladíš Maxe za ušima, „tenhle večer měl skončit úplně jinak. Měl jsem mít v nohách patnáct kilometrů a v hlavě seznam věcí, co musím udělat zítra. Místo toho mám v nohách třes a v hlavě... v hlavě mám pocit, že jsem tě potkal přesně ve vteřině, kdy jsem potřeboval zastavit.“
+                Lucka neodpoví hned. Jen se opře zády o lavičku a podívá se nahoru do korun stromů, kde prosvítají první hvězdy, které město ještě nestihlo přezářit. „Někdy nás vesmír zastaví dost drsně, abychom si všimli, že existují i jiné věci než cílová rovinka,“ podotkne měkce.
+                Ticho, které následuje, není trapné. Je plné porozumění. Max si spokojeně odfrkne, jako by s ní souhlasil. Cítíš, jak se tvůj tep konečně srovnal s rytmem noci.
+                `,
+                choices: [{ text: "Pozvat ji na skutečnou kávu", nextNode: 'kafe' },
+                    { text: "Pozvat ji na společný návrat k běhání", nextNode: 'beh' },
+                    { text: "Rozloučit se", nextNode: 'rozloucit' }
+                ]
+            },
+            beh: {
+                text: `Lucka se na tebe podívá, pak na Maxe, který už nedočkavě přešlapuje a fixuje pohledem zeleného panáčka na semaforu, jako by mu rozuměl. V jeho očích vidíš ten dravý záblesk – Max miluje pohyb a Lucka mu očividně sedla.
+                „Vlastně...“ vyhrkneš dřív, než nad tím stačíš zapřemýšlet, a tvoje vlastní odvaha tě trochu překvapí, „mám v plánu dát si ještě kolečko kolem nábřeží. Je tam teď úplný klid. Nechceš se přidat? Max tě stejně už dávno označil za člena smečky a myslím, že tě bez společného sprintu nenechá odejít.“
+                Lucka se upřímně zasměje. Odloží kelímek s kávou do blízkého koše, upraví si sluchátka na krku a zkušeným pohybem si přitáhne tkaničku u boty. „Tak schválně, jestli mi budeš stačit, hrdino,“ prohodí a v jejím hlase zazní zdravá rivalita. „Běhám teď maratony, tak doufám, že jsi za tu věčnost, co jsme se neviděli, úplně nezatuhl u počítače.“
+                Naskočí zelená a vy vyrážíte.
+                Je to neuvěřitelný pocit. Noční město kolem vás začne ubíhat jako rozmazaná šmouha světel a stínů. Max běží přesně uprostřed mezi vámi, jeho tlapky rytmicky a měkce klapou o asfalt v dokonalém tempu. Lucka běží vedle tebe s naprostou lehkostí, její dech je hluboký a soustředěný. Nemluvíte, není to potřeba. V tuhle chvíli je ticho vaším nejlepším společníkem. Stačí vám jen ten společný rytmus, zvuk vlastních kroků a pocit, že v tuhle noční hodinu patří celé město jen vám dvěma a jednomu psovi.
+                Proběhnete kolem osvětlené náplavky, kde se ve vodě zrcadlí žluté lampy jako roztavené zlato. Minete pár opozdilců z barů, kteří na vás s úsměvem mávají, a prosmýknete se úzkými uličkami, které voní po starém kameni a vlhkosti od řeky. Adrenalin z té skoro-nehody se definitivně přetavil v čistou endorfinovou euforii. Cítíš, jak se ti do plic dostává chladný noční vzduch, a najednou máš pocit, že bys takhle mohl běžet až do svítání.
+                Nakonec skončíte až u starého kamenného mostu. Zastavíte se v jednom z výklenků, kde je slyšet jen temné hučení řeky pod vámi. Lucka se opře rukama o kolena a snaží se popadnout dech. Usměje se na tebe skrz pramínky vlasů, které jí během toho sprintu úplně vypadaly z culíku a teď jí lemují obličej.
+                „To... to bylo neuvěřitelný,“ vydechne a otře si čelo. „Dlouho mě nikdo takhle neprohnal. Máš fakt dobrou fyzičku... oba ji máte.“
+                Stojíte tam, opření o chladné kamenné zábradlí. Nad vámi se rozprostírá jasná obloha a pod vámi se líně převaluje černá hladina Vltavy, odrážející světla vzdáleného hradu. Je tu ticho, které přerušuje jen Maxovo spokojené oddychování, jak si lehl k tvým nohám a očima tě sleduje. Cítíš, jak se k ní tvoje ruka na zábradlí nevědomky přibližuje. Je to ten kritický moment, kdy se vteřiny natahují a ty se musíš rozhodnout, jak tenhle večer skončí.
+                `,
+                choices: [{ text: "Pozvat ji na kávu", nextNode: 'behkafe' },
+                    { text: "Pokračovat v běhu", nextNode: 'behbeh' },
+                    { text: "Rozloučit se", nextNode: 'behrozloucit' }
+                ]
+                
+            },
+            behkafe: {
+                text: `Stojíš u toho zábradlí, díváš se na Lucku a v hlavě ti probleskne obraz, jak sedíte v útulné, drahé kavárně u malého stolku. Jenže pak ti do nosu udeří realita.
+                „Hele, Luci...“ začneš, ale v tu chvíli se Max pořádně oklepe. Z jeho mokré srsti vyletí obláček prachu a typický odér „mokrého psa“, který se okamžitě smísí s tvým vlastním pachem po tom šíleném sprintu.
+                Lucka si nenápadně přitáhne límec bundy k nosu a ty si uvědomíš, že oba vypadáte (a zníte), jako byste právě proběhli parní saunou v plné polní.
+                „Vlastně jsem tě chtěl pozvat na kafe,“ opravíš se rychle a zasměješ se své vlastní blbosti, „ale když se tak na nás dívám... spíš na nás čuchám... tak by nás z té kavárny vynesli dřív, než by stihli namlít zrna. Smrdíme jako po maratonu v dešti.“
+                Lucka se rozesměje, tentokrát úplně upřímně. „Díky bohu, že jsi to řekl první! Už jsem přemýšlela, jak ti to slušně naznačit. Já se jdu okamžitě naložit do vany.“
+                „Takže... sprcha a pak někdy repete? Bez tohohle zápachu?“
+                „Rozhodně,“ mrkne na tebe, naposledy Maxe podrbe za uchem (a pak si otře ruku do kalhot) a vydá se k domovu. Ty tam zůstaneš stát s Maxem, oba upocení, oba „vůňoví“, ale oba s úsměvem.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #12: Voňavé rozloučení. ---",
+                choices: []
+            },
+            behbeh: {
+                text: `„To mi nestačí,“ vyhrkneš a v očích ti plane divoký lesk. „Pojďme běžet dál. Dokud město neztichne úplně, dokud nevyjde slunce. Chci vidět, kam až tahle noc vede.“
+                Lucka se na tebe podívá, v očích má směs úžasu a šílenství, ale pak se jen kousne do rtu a přikývne. „Tak jo, hrdino. Uvidíme, kdo padne první.“
+                Vyrážíte znovu. Most zůstává za vámi a vy se noříte hlouběji do spleti uliček Starého Města. Tempo je vražedné. Max vedle vás vyloženě letí, tlapky se mu sotva dotýkají země, a Lucka drží svůj maratonský rytmus s děsivou pravidelností. Jenže tvé tělo, které ještě před hodinou sedělo na gauči, začíná vysílat nouzové signály.
+                Plíce tě pálí, jako bys vdechoval rozžhavený popel. Nohy ti těžknou, každý krok teď bolí víc než ten předchozí. Cítíš, jak ti pot stéká do očí a pálí, ale nechceš to vzdát. Ne před ní.
+                Uběhnete další dva kilometry, prosmýknete se podél ztichlých kolejí, a když se před vámi objeví prudký kopec k Letné, tvoje tělo prostě řekne „dost“.
+                Zastavíš se tak prudce, že Max do tebe zezadu málem narazí. Ohneš se v pase, ruce si opřeš o kolena a lapáš po dechu tak hlasitě, že to musí být slyšet až na druhém břehu. Vidíš rudé mžitky. Lucka se po pár metrech zastaví, otočí se a s lehkým, skoro neznatelným zadýcháním se na tebe dívá.
+                „Slunce... slunce ještě nikde nevidím,“ prohodí pobaveně a otře si čelo.
+                „Já... já vidím... hvězdičky,“ vykoktáš mezi dvěma nádechy, které zní jako umírající kovářský měch. „Moje nohy... už nepatří... mně.“
+                Lucka dojde k tobě, jemně tě poplácá po zádech a zasměje se. „Hele, oceňuju tu snahu o romantiku, ale tvoje fyzička právě podala demisi. Pojď, doprovodím tě k nejbližší lavičce, než tu doopravdy zkolabuješ.“
+                Dovlečeš se k lavičce, svalíš se na ni a cítíš se jako vyždímaný hadr. Max si sedne před tebe, nakloní hlavu na stranu a vypadá neuvěřitelně svěže, jako by si právě dal jen krátkou procházku na vyčůrání. Tenhle večer neskončil filmovým úsvitem, ale tvojí totální porážkou. Ale aspoň tě Lucka drží za ruku, zatímco se snažíš přežít.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #13: Ego především ---",
+                choices: []
+            },
+           behrozloucit: {
+                text: `„Hele, Luci,“ vydechneš a napřímíš se, zatímco ti chladný vítr od řeky suší pot na čele. „Bylo to skvělé. Vážně. Ale Max už začíná pokukovat po pelíšku a já bych neriskoval, že mi usne uprostřed mostu. Tady se dneska odpojím.“
+                Lucka se narovná, zastrčí si neposlušný pramen vlasů za ucho a v jejích očích vidíš ten upřímný, nefalšovaný úsměv, který tam zůstal po společném běhu. Žádná křeč, žádná ostražitost.
+                „Jasně, chápu,“ přikývne a lehce ti položí ruku na rameno. Cítíš to teplo i přes látku bundy. „Byl to fakt dobrý nápad. Díky, že jsi mě vytáhl z té mojí rutiny.“
+                „Nechceš si... no, vyměníme si čísla? Že bychom to někdy zopakovali? Slibuju, že příště tě proženu ještě víc,“ usměješ se.
+                Lucka bez váhání vytáhne telefon. „To si piš, že zopakujeme. Ale příště vybírám trasu já, hrdino. Počítej s tím, že kopce tě neminou.“
+                Rychle si vyměníte kontakty. Displeje vašich telefonů na moment proříznou tmu mostu. Pak se Lucka naposledy otočí, zamává ti a lehkým, trénovaným krokem se vydá směrem k osvětleným domům na druhém břehu.
+                Ty tam ještě chvíli stojíš a v kapse svíráš telefon, jako bys v něm držel vzácný poklad. Tentokrát se neotáčíš s obavou. Víš, že tohle není konec, ale jen pauza. Když se konečně vydáš k domovu, Max tě radostně oběhne a krátce štěkne do ticha noci. Jako by i on věděl, že tohle rozhodnutí bylo to pravé.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #11: Tak zase příště ---",
+                choices: []
+            },
+            rozloucit: {
+                text: `Na semaforu konečně naskočí zelená. Je to jako startovní výstřel, který ukončí tuhle nečekanou bublinu klidu uprostřed noci.
+                „Hele, radši už půjdu,“ zamumláš a trochu křečovitě se usměješ. „Max už je zralý do pelíšku a já vlastně taky. Rád jsem tě viděl, Luci. Vážně.“
+                Lucka na tebe naposledy zamává kelímkem s kávou. „Jo, já tebe taky. Dávej na sebe pozor... a na Maxe taky. Příště už do té silnice nelítej.“
+                Vykročíš opačným směrem, vstříc temnějším uličkám, které vedou k tvému domu. Cítíš v zádech ten zvláštní magnetismus. Máš nutkání se zastavit, otočit se a zakřičet na ni, jestli si aspoň nevyměníte čísla. V hlavě si promítáš scénář, jak se oba ve stejnou chvíli ohlédnete, usmějete se na sebe přes rameno a tenhle trapný moment rozloučení se změní v něco víc.
+                Po deseti metrech se skutečně zastavíš. Srdce ti poskočí. Prudce se otočíš na patě, připravený na ten filmový oční kontakt.
+                Ale Lucka už tam není. Vidíš jen její záda, jak v rytmu svého běhu mizí za rohem prosklené budovy. Ani jednou nezpomalila. Ani jednou se neohlédla.
+                Zklamaně vydechneš a otočíš se zpátky ke své cestě. Přesně v tu vteřinu, kdy tvůj pohled směřuje dopředu, se Lucka na druhém konci ulice na moment zastavila a ohlédla se za tebou. Viděla jen tvá záda mizící v šeru.
+                Minuli jste se o zlomek sekundy. Město vás pohltilo každého zvlášť, jako by se nic nestalo. Noční ticho prořízne jen Maxovo tiché zakňučení, jak tě táhne dál od místa, kde jsi právě nechal jednu velkou šanci.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #10: Lituju toho? ---",
+                choices: []
+            },
+            kafe: {
+                text: `Srdce se ti v hrudi pomalu uklidňuje, jeho splašený rytmus střídá tupé bušení, které cítíš až ve spáncích. Ale stačí jeden pohled na Lucku a tvůj tep znovu nabírá na obrátkách – tentokrát to ale nemá nic společného s adrenalinem. Lucka byla vždycky ta holka, kvůli které jsi v lavici zapomínal i vlastní jméno. Tenhle nečekaný střet pod neonovým světlem semaforu vrací všem těm starým pocitům jejich sílu.
+                „Hele, Luci...“ začneš a nervózně si rukou projedeš vlasy. Jsou rozcuchané a prosáklé noční vlhkostí, ale je ti to jedno. „Vážně mi skoro vyletělo srdce z hrudi. Nejen z toho auta... ale i z toho, že tě tu vidím. Po takové době.“
+                Lucka se napije ze svého kelímku a přes jeho okraj na tebe povzbudivě mrkne. V jejích očích vidíš odlesky pouličních lamp a neskrývaný zájem.
+                „Vypadáš, že ten šok potřebuješ něčím spláchnout,“ prohodíš trochu odvážněji a kývneš bradou k její kávě. „Nechceš se zítra stavit na něco k pití? Slibuju, že tentokrát to bude bez Maxových kaskadérských kousků a černých SUV. Rád bych slyšel, co jsi celou tu věčnost dělala. Vlastně... vím o pár místech, kde by nám bylo fajn.“
+                Lucka se na vteřinu odmlčí. Svět kolem vás jako by utichl. Max rezignovaně klesl k tvým nohám a bradu si položil na studený asfalt. Lucka vzhlédne k tobě a její úsměv se rozšíří.
+                „To zní jako nejlepší plán, který jsem dneska slyšela,“ odpoví měkce. „Takže, kam mě vezmeš, hrdino?“
+                `,
+                choices: [{ text: "Pozvat ji k sobě domů ", nextNode: 'domu' },
+                    { text: "Pozvat ji do Hospody u řeky  ", nextNode: 'reka' },
+                    { text: "Pozvat ji do Hospody na růžku  ", nextNode: 'ruzek' }
+                ]
+            },
+            domu: {
+                text: `Nadechneš se, povzbuzen tím, jak se na tebe usmívá, a rozhodneš se zariskovat. V hlavě ti probleskne obraz klidného večera u tebe v obýváku, bez hluku ulice.
+                „Vlastně...“ začneš a trochu se k ní nakloníš. „Nechceš zajít rovnou ke mně? Bydlím kousek. Udělám nám fakt dobrou večeři, otevřeme víno a můžeme si v klidu popovídat bez toho, aby nás tu ofukoval vítr na přechodu.“
+                Úsměv na Lucčině tváři v tu vteřinu zamrzne. Vidíš, jak se jí v očích něco změní – ten jiskřivý zájem vystřídá ostražitost a mírný ústup. Udělá podvědomě malý krok zpět k zábradlí a pevněji sevře svůj kelímek s kávou.
+                „Ke mně domů?“ zopakuje tiše a v jejím hlase už není ta pobavenost jako předtím. „Hele, to je... to je asi trochu moc rychlý, ne? Neviděli jsme se roky a ty mě po pěti minutách na ulici zveš k sobě do bytu?“
+                „Já jsem to tak nemyslel, jen jsem chtěl klid...“ snažíš se to zachránit, ale cítíš, jak se ti jazyk plete.
+                „Jasně, chápu,“ přeruší tě a nuceně se pousměje, ale už se ti nedívá do očí. Sleduje semafor, jako by tu červenou chtěla očima popohnat. „Vypadáš jako fajn kluk a s tím psem ti to sekne, ale tohle na mě prostě působí divně. Jsi na mě moc hrubej, moc... rychlej. Upřímně, asi se na to rande vykašleme. Tohle mi úplně nesedlo.“
+                Na semaforu naskočí zelená. Lucka ani nečeká, až se pořádně rozloučíš. „Měj se,“ hodí přes rameno a rychlým krokem, skoro až během, se ztratí v davu na druhé straně ulice.
+                Stojíš tam jako opařený. Max na tebe tázavě koukne, zakňučí a olízne ti ruku. I on cítí, že se ta atmosféra úplně rozpadla. Zachránil jsi ho před autem, ale tuhle šanci jsi pohřbil sám.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #8: Rychlý start, rychlý konec ---",
+                choices: []
+            },
+            reka: {
+                text: `Dojdete k dřevěné terase, která visí přímo nad hladinou. Voda pod vámi tiše šplouchá o pilíře a odrazy pouličních lamp se na hladině kroutí jako zlatí hadi. Je tu chladněji, ale vzduch voní čerstvostí a dálkou.
+                „Tady to miluju,“ vydechne Lucka a opře se o zábradlí, než se usadíte k malému stolku se svíčkou v zavařovačce. Max si položí hlavu na tvoje boty a sleduje temnou řeku. Objednáte si a chvíli jen tak sedíte a posloucháte šumění vody.
+                „Vždycky mě fascinovalo, jak řeka prostě teče dál, ať se v tom městě děje cokoli,“ prohodí Lucka a zahledí se do tmy. „Člověk si tu uvědomí, jak moc se pořád za něčím honíme, přitom nám ty nejdůležitější věci protékají mezi prsty.“
+                Neodpovídáš, nějak ses zarazil - nastává trapné ticho... Lucka na tebe upřeně kouká a čeká na tvou reakci. Atmosféra zhoustla a ticho mezi vámi začíná být tíživé. Je to ten moment, kdy jedna špatná věta může zničit všechno, co jste za tu poslední hodinu vybudovali.
+                `,
+                choices: [  { text: "Promiň, jen jsem se nad tím zamyslel", nextNode: 'promin' },
+                            { text: "Hele, hlavně že je co pít, ne... ", nextNode: 'piti' },
+                            { text: "Podívej na Maxe, jak je v klidu... ", nextNode: 'maxik' }
+                ]
+            },
+            ruzek: {
+                text: `Vstoupíte do dveří a do nosu vás okamžitě udeří vůně guláše, nakládaného hermelínu a starého dřeva. Je to ta klasická čtvrtá cenová, která si na nic nehraje. U stolů sedí pár štamgastů, televize v rohu běží bez zvuku a vzduchem se nese cinkání půllitrů.
+                „Tady je to poctivý,“ usměje se Lucka a shodí ze sebe běžeckou bundu. Sednete si do rohu k oknu, Max se okamžitě uvelebí pod stolem na studených dlaždicích a s povzdechem zavře oči. Hostinský vám mlčky přinese dvě piva (nebo kofoly) a Lucka se s chutí napije.
+                „Vlastně jsem ráda, že jsme nešli do nějakého načančaného podniku,“ řekne a utře si pěnu z horního rtu. „V těchhle místech má člověk pocit, že se čas trochu zastavil. Což je v tomhle šíleným městě občas potřeba, nemyslíš?“
+                `,
+                choices: [  { text: "Promiň, jen jsem se nad tím zamyslel", nextNode: 'promin' },
+                            { text: "Hele, hlavně že je co pít, ne... ", nextNode: 'piti' },
+                            { text: "Podívej na Maxe, jak je v klidu... ", nextNode: 'maxik' }
+                ]
+            },
+
+            piti: {
+                text: `„Hele, hlavně že je co pít, ne...“ prohodíš s lehkým úsměvem a poklepáním na stůl se snažíš zahnat to tíživé ticho. „Vždyť o nic nejde, Luci. Hlavu vzhůru, máme pivo, Max je v pohodě, tak proč si kazit večer nějakým hloubáním nad pondělky?“
+                Lucka ruku s podtáckem okamžitě zastaví. Její výraz, do té doby otevřený a zranitelný, se v jediné vteřině změní v neprostupnou masku. Oči jí chladně ztvrdnou a úsměv, který se ti pokusila věnovat, připomíná spíš křeč.
+                „Jasně,“ řekne tónem, ze kterého mrazí. „Hlavně že je co pít. Jak prosté.“
+                Pomalu se odune od stolu, jako by se tě štítila, a začne si oblékat bundu. Její pohyby jsou prudké a naštvané. Ty tam sedíš, půllitr v ruce, a najednou ti dochází, že jsi právě totálně selhal v testu, o kterém jsi ani nevěděl, že probíhá.
+                „Víš, myslela jsem, že jsi jiný,“ prohodí a ani se na tebe nepodívá. „Že mě aspoň na vteřinu doopravdy posloucháš. Ale ty se jen bojíš čehokoli, co není povrchní sranda. Tak si dopij to pivo. Sám.“
+                „Luci, počkej, já...“ začneš, ale ona tě nenechá domluvit.
+                „Měj se,“ hodí přes rameno a vyrazí ke dveřím.
+                Zůstaneš tam sedět s Maxem, který na tebe tázavě zakňučí. Cítíš se jako idiot. Zachránil jsi ho před jedním SUV, ale svou vlastní hloupostí jsi právě nechal ujet šanci, která se podruhé opakovat nebude. Lucka je pryč a ty víš, že zítra v pět u parku na tebe nikdo čekat nebude.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #8: Žízeň ---",
+                choices: []
+            },
+            maxik: {
+                text: `„Podívej na Maxe, jak je v klidu...“ zamumláš a ukážeš na psa, který si právě slastně povzdechl ze spaní. „Ten je opravdu roztomilej, co? Možná mu tu pohodu trochu závidím. Žádný pondělky, žádný krize, jen plný bříško a drbání.“
+                Lucka se na Maxe podívá a v obličeji jí na vteřinu probleskne něha. „Je boží,“ připustí a jemně ho špičkou boty pohladí po boku. Pak se ale narovná a její pohled se vrátí k tobě. Je v něm cítit mírné zklamání. „Ale víš, co je vtipný? Že se ptám tebe na tvůj život a ty mi odpovíš přes psa. Jako by ses bál říct něco sám za sebe.“
+                Povzdechne si a opře se zády o židli. „Možná je to ten problém. Všichni se schováváme za fotky psů, za vtipy na sítích, ale když dojde na lámání chleba, nikdo neumí být upřímnej. Ani ve vztazích. Vždycky jsem měla pocit, že lidi chtějí jen tu hezkou fasádu, ale jakmile přijde na to, co se děje uvnitř, radši přepnou kanál. Máš to taky tak? Že radši utečeš, než abys riskoval, že tě někdo doopravdy uvidí?“
+                Atmosféra je teď extrémně křehká. Lucka ti právě položila otázku na tělo a čeká, jestli se zase pokusíš vyklouznout, nebo jestli tentokrát zůstaneš v ringu.
+                `,
+                choices: [  { text: "Tak nechceš jít ke mně domů... ", nextNode: 'pujdemedomu' },
+                            { text: "Vím, co myslíš. Taky se občas bojím otevřít... ", nextNode: 'otevrit' }
+            ]
+            },
+            pujdemedomu: {
+                text: `Jen co ti ta věta vyletí z pusy, došlo ti, že jsi právě odpálil bombu. Lucka se prudce nadechne a na moment úplně ztuhne. Její tvář, která před vteřinou hledala pochopení, teď zrudne vzteky a zklamáním.
+                „To si snad děláš srandu, ne?“ vyhrkne a její hlas se třepe potlačovaným hněvem. „Já se ti tady snažím říct, jak je těžký najít v tomhle městě někoho, kdo tě aspoň trochu vnímá, kdo tě nebere jen jako další položku v kalendáři... a ty ze sebe vypustíš tohle?“
+                Prudce práskne dlaní do stolu, až Max pod ním polekaně nadskočí a zmateně na vás kouká.
+                „Vy chlapi fakt nemyslíte na nic jinýho, co?“ pokračuje a už se ani nesnaží mluvit potichu. „Vůbec jsi mě neposlouchal. Ani slovo! Stačilo ti, že se na tebe usmívám a že mám legíny, viď? Celou tu dobu jsem si myslela, že jsme si sedli, ale ty jsi jen čekal na příležitost, jak mě dostat do postele.“
+                „Luci, tak jsem to nemyslel, byl to jen vtip...“ snažíš se to zoufale uhasit, ale ona už stojí a přes rameno si hází bundu.
+                „Vtip? Tak to se ti fakt povedlo. Směju se tak moc, až mi z toho lezou oči z důlků,“ pronese s ledovým sarkasmem. „Víš co? Nech mě být. Nechci od tebe žádný kafe, žádný zprávy, nic. Užij si ten svůj klid s Maxem, ten tě aspoň nebude trápit svýma pocitama.“
+                Otočí se na podpatku a vyrazí z hospody takovou rychlostí, že za sebou skoro vyrazí dveře. Zůstaneš tam sedět, v obličeji tě pálí hanba a polovina hospody na tebe zírá jako na největšího pitomce v okrese. Max se k tobě přitiskne a tichým, smutným zakňučením ti připomene, že tuhle bitvu jsi prohrál na celé čáře.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #14: Myšlenky chlapa ---",
+                choices: []
+            },
+            otevrit: {
+                text: `Vím, co myslíš. Taky se občas bojím otevřít...“ začneš potichu a poprvé se jí podíváš zpříma do očí bez jakéhokoli vtipkování. „Máš pravdu, schovávám se za Maxe, protože je to jednodušší než přiznat, že v tomhle městě taky občas jen tak bloumám a doufám, že narazím na někoho, s kým nebudu muset hrát žádné divadlo.“ Lucka na tebe dlouze hledí. Její pohled už není zkoumavý, ale měkký a překvapivě klidný. Pak se mírně pousměje, tentokrát úplně jinak – je v tom něco spikleneckého a křehkého zároveň. „Víš co?“ řekne a začne si balit věci do batohu. „Tady je hroznej hluk a to pivo už stejně nestojí za nic. Bydlím kousek odtud, mám tam balkon s výhledem na střechy a fakt dobrý čaj. A Maxovi tam můžu dát aspoň misku s vodou, vypadá, že má dost.“ Na vteřinu se ti zastaví srdce. „Ty myslíš... k tobě?“ „Jo,“ přikývne a vstane. „Nechci, aby tenhle večer skončil jen tím, že se vypaříme v metru. Pojď, vezmeme to přes park, ať se Max ještě proběhne.“ Vycházíte z hospody do chladné noci, ale tobě je najednou neuvěřitelný hic. Jdete vedle sebe, rameny se občas lehce dotknete a ty víš, že tahle noc se právě změnila v něco, co si budeš pamatovat hodně dlouho. Max vesele poskakuje kolem vás, jako by i on věděl, že tohle je to nejlepší vítězství, jakého jste dnes mohli dosáhnout.
+                Cesta parkem utíkala až příliš rychle. Noční vzduch byl svěží, ale napětí mezi vámi vytvářelo vlastní hřejivé mikroklima. Když Lucka odemkla těžké domovní dveře a vystoupali jste do posledního patra, hluk velkoměsta zůstal někde hluboko pod vámi. Její byt byl přesně takový, jakou jsi ji odhadoval – trochu chaotický, plný knížek, s měkkým světlem lampy v rohu a vůní bylinek. Max se okamžitě zabydlel u misky s vodou a spokojeně se svalil na koberec, zatímco vy dva jste skončili na slibovaném balkoně.
+                Čaj pomalu chladl v hrncích, ale nikdo z vás ho nepil. Stáli jste opření o zábradlí, rameno na rameni, a sledovali světla Prahy. Ta počáteční křečovitost z hospody byla pryč, nahradila ji zvláštní, elektrizující blízkost. Když jsi hlesl poděkování a otočil se k ní, Lucka se na tebe podívala s naprostým odhodláním. V měsíčním světle vypadala křehce, ale její hlas byl pevný, když ti připomněla, že teď už si na nic nehrajete.
+                Když se tě poprvé dotkla konečky prstů na tváři, svět kolem přestal existovat. První polibek chutnal po odvaze konečně zahodit všechny obranné mechanismy. Nebylo to uspěchané ani dravé; byla v tom neuvěřitelná něha někoho, kdo po dlouhé době našel spřízněnou duši. Přesunuli jste se z chladného balkonu dovnitř, kde ticho bytu přerušovalo jen Maxovo spokojené oddechování. Seděli jste blízko sebe na pohovce, hovor se změnil v tichý šepot a každé letmé pohlazení nebo stisk ruky jen prohlubovalo pocit, že tohle je přesně to místo, kde máš být. Ta noc plynula v oparu vzájemného objevování, kdy slova už nebyla potřeba, protože vaše blízkost mluvila za vše. Veškerý ten sarkasmus a vtipy byly jen předehrou k tomuto momentu, kdy už nebylo potřeba nikoho ohromovat a mohli jste prostě jen být spolu.
+                Když jsi nad ránem pozoroval, jak se první paprsky slunce opírají o střechy protějších domů, cítil jsi neuvěřitelný klid. Lucka vedle tebe odpočívala a ty jsi věděl, že tohle nebylo jen náhodné setkání na jednu noc. Byla to noc, kdy jsi konečně přestal bloumat městem sám. Max sice vyhrál svůj pomyslný zápas o pozornost, ale ty jsi věděl, že skutečným vítězem jsi dnes ty.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #15: Tohle je snad sen ---",
+                choices: []
+            },
+            promin: {
+                text: `„Promiň, jen jsem se nad tím zamyslel,“ řekneš tiše a odložíš sklenici na dřevěný stůl, který už pamatuje desítky podobných příběhů. „Máš pravdu. Všichni se někam ženeme, sledujeme notifikace, řešíme deadliny... a přitom nejvíc záleží na tomhle. Sedět v klidu, cítit vůni dřeva a mít vedle sebe někoho, s kým se nemusíš přetvařovat.“
+                Lucka na tebe upřeně kouká. Její výraz je teď úplně jiný než na začátku u toho přechodu, kde na sebe narazili dva cizinci v chaosu velkoměsta. Z jejích očí zmizela ostražitost a nahradil ji klid a něco, co vypadá jako opravdový zájem. „Přesně,“ vydechne a na okamžik sklopí zrak k jantárové hladině svého nápoje. „Dlouho jsem s nikým nemluvila tak... normálně. Bez her. Bez toho, abych musela přemýšlet, jak u toho vypadám nebo co si o mně ten druhý pomyslí.“
+                Dopijete své sklenice a v hospodě začne hrát z rádia nějaká stará balada, jejíž slova zanikají v praskání starých reproduktorů, ale melodie dokonale dokresluje tuhle chvíli. Atmosféra mezi vámi zhoustla, ale tentokrát je to příjemné – je to ten druh napětí, který vás k sobě přitahuje, místo aby vás rozděloval. Max pod stolem spokojeně chrápe, s hlavou položenou na tvých botách, a úplně ignoruje okolní svět. Lucka se na tebe podívá, pak na Maxe a pak ti položí ruku na dlaň. Její kůže je teplá a trochu vlhká od té sklenice, ale ten dotek je neuvěřitelně skutečný.
+                „Hele...“ začne a trochu se začervená, což v tlumeném světle hospody působí až nadpozemsky, „nechci, aby to teď skončilo u metra. Bydlím kousek, mám tam balkon s výhledem na noční Prahu a v lednici asi ještě nějaké víno. Teda pokud se nebojíš, že tě Max v noci sežere za to, že mu kradeš místo na gauči. Chceš jít ke mně?“
+                Pousměješ se a tvůj pohled sklouzne na její prsty, které se jemně proplétají s tvými. Ta nabídka visí ve vzduchu jako příslib něčeho, co se nestává každý den. „Vzhledem k tomu, že Max právě teď vypadá jako nejlínější pes na světě, myslím, že ten gauč nějak vyjednáme,“ odpovíš a v hlase ti zazní upřímné pobavení i očekávání.
+                Pomalu se zvednete. Maxe musíš trochu popostrčit, protože se mu z vyhřátého místa pod stolem vůbec nechce, ale jakmile zaslechne zachrastění vodítka, okamžitě nastraží uši a je připraven k akci. Zaplatíš u baru, prohodíš pár slov s hostinským, který vás vyprovází uznalým kývnutím, a vyjdete ven do chladného nočního vzduchu.
+                Cesta k ní je krátká, ale intenzivní. Noční město má úplně jinou energii než ten odpolední shon. Světla lamp vrhají dlouhé stíny na dlažební kostky a vy kráčíte bok po boku. Občas se o sebe ramenem nechtěně otřete a pokaždé vás to oba přiměje k letmému úsměvu.
+                Když Lucka odemkne dveře svého bytu, vyvalí se na vás útulná vůně – směs bylinek, starých knížek a tepla domova. Byt je přesně takový, jaký jsi ho u ní podvědomě čekal. Žádný sterilní katalogový design, ale místo, kde má každý předmět svůj příběh. „Tak tady mě máš,“ prohlásí Lucka a shodí ze sebe kabát. „Maxi, ty se ulož, kam chceš, jen mi prosím nesežer ty nové polštáře na balkoně.“
+                Vyjdete ven. Je sice chladno, ale Lucka hned přinese dvě tlusté vlněné deky. Sednete si vedle sebe na dřevěnou lavici, zabalení až po uši, a před vámi se rozprostře Praha v celé své noční kráse. Vidíš osvětlený Pražský hrad v dálce, nekonečné řady oranžových pouličních lamp a slyšíš vzdálené dunění tramvaje, která projíždí někde dole v údolí.
+                Lucka rozleje víno do dvou sklenic. „Na nečekaná setkání,“ řekne a ťukne si s tebou. Cítíš, jak se k tobě přitiskne víc, aby se zahřála. Je to přirozené, nenucené a v tu chvíli si uvědomíš, že jsi právě našel přesně to, co ti v tom každodenním kolotoči chybělo. Ten pocit, že se čas zastavil a jediné, co je důležité, je přítomný okamžik a blízkost člověka, který tě vidí takového, jaký skutečně jsi.
+                „Děkuju, že jsi šel,“ zamumlá Lucka se zavřenýma očima, hlavu položenou na tvém rameni. A ty víš, že tahle noc je jen začátek.
+                `,endTitle: "--- ALTERNATIVNÍ KONEC #16: Empatie",
+                choices: []
+            },     
+
+        };
+
+       let countdown;
+const COOLDOWN_TIME = 60 * 60 * 1000; // 1 hodina v milisekundách
+let inputBuffer = ""; // Pro zachycení admin kódu
+
+// --- POMOCNÉ FUNKCE ---
+
+// Funkce, která vysekne jen název za dvojtečkou (např. z "KONEC: Fakáč" udělá "Fakáč")
+function getCleanTitle(fullTitle) {
+    if (!fullTitle) return "Neznámý osud";
+    const parts = fullTitle.split(':');
+    const title = parts.length > 1 ? parts[1] : parts[0];
+    return title.replace(/---/g, '').trim();
+}
+
+// --- LOGIKA HRY ---
+
+function showNode(nodeId) {
+    const node = storyNodes[nodeId];
+    const textElement = document.getElementById('text');
+    const choicesElement = document.getElementById('choices');
+    const timerElement = document.getElementById('timer');
+
+    clearInterval(countdown);
+    timerElement.style.display = 'none';
+    textElement.innerText = node.text;
+    choicesElement.innerHTML = '';
+    window.scrollTo(0, 0);
+
+    if (node.choices && node.choices.length > 0) {
+        const startBtn = document.createElement('button');
+        startBtn.innerText = "ROZHODNOUT SE (7s)";
+        startBtn.classList.add('action-btn');
+
+        startBtn.onclick = () => {
+            startBtn.remove();
+            renderChoices(node.choices);
+            startTimer(7, node.choices);
+        };
+        choicesElement.appendChild(startBtn);
+    } else {
+        renderEnd(node);
+    }
+}
+
+function renderChoices(choices) {
+    const choicesElement = document.getElementById('choices');
+    choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.innerText = choice.text;
+        button.classList.add('choice-btn');
+        button.onclick = () => {
+            clearInterval(countdown);
+            showNode(choice.nextNode);
+        };
+        choicesElement.appendChild(button);
+    });
+}
+
+function startTimer(seconds, choices) {
+    const timerElement = document.getElementById('timer');
+    timerElement.style.display = 'block';
+    let timeLeft = seconds;
+    timerElement.innerText = timeLeft;
+
+    countdown = setInterval(() => {
+        timeLeft--;
+        timerElement.innerText = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(countdown);
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            const randomChoice = choices[randomIndex];
+            showNode(randomChoice.nextNode);
+        }
+    }, 1000);
+}
+
+// --- OBRAZOVKY (MOODOO DESIGN) ---
+
+function renderEnd(node) {
+    const choicesElement = document.getElementById('choices');
+    const fullTitle = node.endTitle || "--- KONEC ---";
+    const cleanTitle = getCleanTitle(fullTitle);
+
+    localStorage.setItem('lastPlayTime', Date.now());
+    
+    if (!localStorage.getItem('firstEnd')) {
+        localStorage.setItem('firstEnd', cleanTitle);
+    }
+
+    const firstEnd = localStorage.getItem('firstEnd');
+
+    // Vytvoříme hlavní kontejner
+    const endDiv = document.createElement('div');
+    endDiv.className = 'moodoo-screen';
+    
+    // 1. FÁZE: Zobrazíme jen tlačítko pro odemknutí
+    endDiv.innerHTML = `
+        <div id="unlock-section" style="text-align: center; margin-top: 40px;">
+            <p style="color: #666; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 20px;">Tvůj příběh je u konce...</p>
+            <button class="moodoo-btn" onclick="revealFate()" style="background: linear-gradient(145deg, #362f27, #241a1a); border-color: #d93838; padding: 20px 40px; font-size: 0,7rem;">
+                ODEMKNOUT SVŮJ KONEC
+            </button>
+        </div>
+
+        <div id="fate-card" style="display: none; opacity: 0; transform: translateY(20px); transition: all 0.5s ease;">
+            <div class="moodoo-card">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#DAA050" stroke-width="2" style="margin-bottom: 20px;">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                </svg>
+                <div class="moodoo-card-label">Tvůj vyložený osud:</div>
+                <div class="moodoo-card-title" style="font-size: 1.8rem; margin: 10px 0 20px 0;">${cleanTitle}</div>
+                <div class="moodoo-card-link" onclick="window.location.href='#diskuze'">Diskuze</div>
+            </div>
+
+            <div style="margin-bottom: 30px; text-align: center; opacity: 0.8;">
+                <p style="font-size: 0.75rem; color: #666; text-transform: uppercase; margin-bottom: 5px;">Tvůj historicky první konec:</p>
+                <p style="color: #DAA050; font-size: 1rem; font-weight: bold; margin: 0;">${firstEnd}</p>
+            </div>
+
+            <button class="moodoo-btn" onclick="handleRestart()">Zkusit jinou cestu</button>
+        </div>
+    `;
+
+    choicesElement.appendChild(endDiv);
+}
+
+// 2. FÁZE: Funkce pro odhalení (animace)
+function revealFate() {
+    const unlockSection = document.getElementById('unlock-section');
+    const fateCard = document.getElementById('fate-card');
+
+    unlockSection.style.display = 'none';
+    fateCard.style.display = 'block';
+    
+    // Krátký timeout pro spuštění CSS animace
+    setTimeout(() => {
+        fateCard.style.opacity = '1';
+        fateCard.style.transform = 'translateY(0)';
+    }, 10);
+}
+
+function initGame() {
+    const lastPlay = localStorage.getItem('lastPlayTime');
+    const firstEndRaw = localStorage.getItem('firstEnd');
+    const textElement = document.getElementById('text');
+    const choicesElement = document.getElementById('choices');
+    const timerElement = document.getElementById('timer');
+
+    if (lastPlay && (Date.now() - parseInt(lastPlay) < COOLDOWN_TIME)) {
+        const nextPlayDate = new Date(parseInt(lastPlay) + COOLDOWN_TIME);
+        const hours = nextPlayDate.getHours().toString().padStart(2, '0');
+        const minutes = nextPlayDate.getMinutes().toString().padStart(2, '0');
+
+        timerElement.style.display = 'none';
+
+        // Pokud v paměti už je první konec, použijeme ho, jinak dáme placeholder
+        const firstEndDisplay = firstEndRaw ? firstEndRaw : "Zatím neznámý";
+
+        textElement.innerHTML = `
+            <div class="moodoo-screen">
+                <p class="moodoo-status-text">Příběh je možné hrát jednou za hodinu.<br>
+                Můžeš se vrátit v <b>${hours}:${minutes}</b></p>
+
+                <div class="moodoo-card">
+                    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#DAA050" stroke-width="1.5">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path>
+                        <path d="M10 2v8l3-3 3 3V2"></path>
+                    </svg>
+                    <div class="moodoo-card-label">Tvůj první konec:</div>
+                    <div class="moodoo-card-title">${firstEndDisplay}</div>
+                    <div class="moodoo-card-link" onclick="window.location.href='#diskuze'">Diskuze</div>
+                </div>
+            </div>
+        `;
+        choicesElement.innerHTML = '';
+    } else {
+        showNode('uvod');
+    }
+}
+
+// --- OSTATNÍ FUNKCE ---
+
+function handleRestart() {
+    const lastPlay = localStorage.getItem('lastPlayTime');
+    if (lastPlay) {
+        const timePassed = Date.now() - parseInt(lastPlay);
+        if (timePassed < COOLDOWN_TIME) {
+            initGame();
+            return;
+        }
+    }
+    localStorage.removeItem('lastPlayTime');
+    showNode('uvod');
+}
+
+window.addEventListener('keydown', (e) => {
+    inputBuffer += e.key.toLowerCase();
+    if (inputBuffer.length > 10) inputBuffer = inputBuffer.substring(1);
+
+    if (inputBuffer.includes("skip")) {
+        inputBuffer = "";
+        localStorage.removeItem('lastPlayTime');
+        localStorage.removeItem('firstEnd');
+        alert("Admin: Limit a historie vyresetovány.");
+        location.reload();
+    }
+});
+
+// START
+initGame();
+    </script>
+
+</body>
+
+</html>

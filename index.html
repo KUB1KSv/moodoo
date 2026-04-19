@@ -1,23 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Moodoo</title>
+    <script src="lang.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap");
+        @import url("https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
         :root {
-            --bg: #12161A;
-            --bg-soft: #12161A;
-            --accent: #D44543;
+            --bg: #12161a;
+            --bg-soft: #12161a;
+            --accent: #d44543;
             --text: #f3f3f3;
             --text-muted: #d1d1d1;
             --border: rgba(255, 255, 255, 0.15);
-            --primary-red: #D44543;
-            --text-main: #E6E3DD;
+            --primary-red: #d44543;
+            --text-main: #e6e3dd;
             --text-muted: #a0a0a0;
             --btn-hover: #f44336;
         }
@@ -29,7 +30,7 @@
         }
 
         body {
-            background: #12161A;
+            background: #12161a;
             color: var(--text);
             min-height: 100vh;
         }
@@ -46,11 +47,12 @@
         }
 
         .page::before {
-            content: '';
+            content: "";
             position: fixed;
             inset: 0;
-            background: linear-gradient(180deg, #12161A, rgba(0, 0, 0, 0.9)),
-                url('images/image\ 21.png') center/cover no-repeat;
+            background:
+                linear-gradient(180deg, #12161a, rgba(0, 0, 0, 0.9)),
+                url("images/image\ 21.png") center/cover no-repeat;
             z-index: -1;
             background-repeat: no-repeat;
         }
@@ -67,7 +69,7 @@
             font-size: 1.8rem;
             font-weight: 800;
             letter-spacing: 0.15em;
-            text-shadow: 0 18px 50px #12161A;
+            text-shadow: 0 18px 50px #12161a;
         }
 
         .nav-links {
@@ -75,7 +77,9 @@
             align-items: center;
             gap: 24px;
             font-size: 0.95rem;
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition:
+                transform 0.3s ease,
+                opacity 0.3s ease;
         }
 
         .nav-links a:hover,
@@ -86,7 +90,7 @@
         .menu-toggle {
             display: none;
             border: none;
-            background: #12161A;
+            background: #12161a;
             width: 44px;
             height: 44px;
             border-radius: 14px;
@@ -98,25 +102,25 @@
         }
 
         .menu-toggle:hover {
-            background: #12161A;
+            background: #12161a;
         }
 
         .menu-toggle span {
             display: block;
             width: 22px;
             height: 2px;
-            background: #12161A;
+            background: #12161a;
             border-radius: 2px;
             position: relative;
         }
 
         .menu-toggle span::before,
         .menu-toggle span::after {
-            content: '';
+            content: "";
             position: absolute;
             width: 22px;
             height: 2px;
-            background: #12161A;
+            background: #12161a;
             border-radius: 2px;
             left: 0;
             transition: transform 0.3s ease;
@@ -151,8 +155,8 @@
             border: none;
             transition: all 0.2s;
             padding: 10px 22px;
-            background-color: #D44543;
-            color: #E6E3DD;
+            background-color: #d44543;
+            color: #e6e3dd;
         }
 
         .signin-btn:hover {
@@ -176,7 +180,7 @@
             flex-direction: column;
             gap: 0;
             padding: 14px 0;
-            box-shadow: 0 18px 60px #12161A;
+            box-shadow: 0 18px 60px #12161a;
             opacity: 1;
             z-index: 20;
         }
@@ -191,9 +195,9 @@
         }
 
         .lang-toggle {
-            border: 1px solid #DAA050;
-            background: #12161A;
-            color: #DAA050;
+            border: 1px solid #daa050;
+            background: #12161a;
+            color: #daa050;
             padding: 10px 14px;
             border-radius: 10px;
             cursor: pointer;
@@ -201,14 +205,16 @@
             align-items: center;
             gap: 10px;
             font-size: 0.95rem;
-            transition: background 0.2s ease, transform 0.2s ease;
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
         }
 
         .lang-toggle:hover {
             background: rgba(255, 255, 255, 0.14);
         }
 
-        .lang-toggle[aria-expanded='true'] {
+        .lang-toggle[aria-expanded="true"] {
             transform: translateY(-1px);
         }
 
@@ -227,8 +233,8 @@
             top: calc(100% + 10px);
             right: 0;
             min-width: 180px;
-            background: #12161A;
-            border: 1px solid #DAA050;
+            background: #12161a;
+            border: 1px solid #daa050;
             border-radius: 10px;
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
             z-index: 20;
@@ -256,7 +262,7 @@
         .lang-item:hover,
         .lang-item.active {
             background: rgba(255, 255, 255, 0.08);
-            color: #E6E3DD;
+            color: #e6e3dd;
         }
 
         .hero {
@@ -269,7 +275,7 @@
         }
 
         .hero::before {
-            content: '';
+            content: "";
             position: absolute;
             inset: 0;
             background-repeat: no-repeat;
@@ -327,7 +333,7 @@
         .discover {
             padding-top: 20%;
             text-align: center;
-            color: #DAA050;
+            color: #daa050;
             font-family: "Inter", sans-serif;
             font-weight: 700;
             text-decoration: underline;
@@ -338,12 +344,14 @@
             min-height: 56px;
             border: none;
             border-radius: 12px;
-            background: #D44543;
+            background: #d44543;
             color: white;
             font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
             padding: 0 24px;
             box-shadow: 0 18px 48px rgba(229, 57, 53, 0.18);
         }
@@ -363,15 +371,15 @@
         }
 
         .feature-card {
-            background: #251B1E;
-            border: 6px solid #D44543;
+            background: #251b1e;
+            border: 6px solid #d44543;
             border-radius: 10px;
             padding: 58px 28px;
             box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
         }
 
         .feature-card h3 {
-            color: #DAA050;
+            color: #daa050;
             text-align: center;
         }
 
@@ -388,7 +396,7 @@
         }
 
         .feature-card p {
-            color: #E6E3DD;
+            color: #e6e3dd;
             text-align: center;
             padding-top: 10%;
             font-size: 1.5rem;
@@ -398,7 +406,6 @@
             margin-bottom: 14px;
             font-size: 1.2rem;
         }
-
 
         .showcase {
             display: grid;
@@ -416,11 +423,13 @@
             border-radius: 14px;
             overflow: hidden;
             min-height: 260px;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.65));
+            background: linear-gradient(180deg,
+                    rgba(0, 0, 0, 0.1),
+                    rgba(0, 0, 0, 0.65));
             box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
         }
 
-        .movie-card:hover{
+        .movie-card:hover {
             transform: scale(1.05);
         }
 
@@ -438,12 +447,15 @@
         }
 
         .pozadi {
-            background: linear-gradient(90deg, #12161A 1%, rgba(10, 10, 10, 0.8) 20%, transparent 100%),
-                url('images/image\ 21.png');
+            background:
+                linear-gradient(90deg,
+                    #12161a 1%,
+                    rgba(10, 10, 10, 0.8) 20%,
+                    transparent 100%),
+                url("images/image\ 21.png");
             background-size: 1000%;
             background-repeat: no-repeat;
-            background-color: #12161A;
-
+            background-color: #12161a;
         }
 
         @media (max-width: 900px) {
@@ -457,7 +469,6 @@
             .menu-toggle {
                 display: inline-flex;
             }
-
 
             .nav-links {
                 display: none;
@@ -475,7 +486,9 @@
                 opacity: 0;
                 transform: translateY(-10px);
                 pointer-events: none;
-                transition: opacity 0.24s ease, transform 0.24s ease;
+                transition:
+                    opacity 0.24s ease,
+                    transform 0.24s ease;
                 z-index: 20;
             }
 
@@ -637,9 +650,10 @@
 <body>
     <div class="page">
         <header class="navbar">
-            <a class="brand" href="#"><img src="images/image 22.png" alt="Moodoo"></a>
-            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu"
-                aria-expanded="false"><span></span></button>
+            <a class="brand" href="#"><img src="images/image 22.png" alt="Moodoo" /></a>
+            <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false">
+                <span></span>
+            </button>
             <div class="nav-links" id="navLinks">
                 <a data-text="news" href="#">Novinky</a>
                 <a data-text="categories" href="#">Kategorie</a>
@@ -661,10 +675,18 @@
                         </svg>
                     </button>
                     <div class="lang-menu" role="listbox">
-                        <button class="lang-item active" type="button" data-lang="cs">🇨🇿 Čeština</button>
-                        <button class="lang-item" type="button" data-lang="en">🇺🇸 English</button>
-                        <button class="lang-item" type="button" data-lang="es">🇪🇸 Español</button>
-                        <button class="lang-item" type="button" data-lang="de">🇩🇪 Deutsch</button>
+                        <button class="lang-item active" type="button" data-lang="cs">
+                            🇨🇿 Čeština
+                        </button>
+                        <button class="lang-item" type="button" data-lang="en">
+                            🇺🇸 English
+                        </button>
+                        <button class="lang-item" type="button" data-lang="es">
+                            🇪🇸 Español
+                        </button>
+                        <button class="lang-item" type="button" data-lang="de">
+                            🇩🇪 Deutsch
+                        </button>
                     </div>
                 </div>
                 <a class="signin-btn" data-text="signIn" href="po_prihlaseni.html">Přihlásit se</a>
@@ -674,54 +696,64 @@
         <main class="hero">
             <div class="hero-copy">
                 <h1 data-text="heroTitle">Príběhy, které se rozhodují s tebou.</h1>
-                <p data-text="heroDesc">Rozhoduj se jako hrdina — jejich směr určuješ ty.</p>
+                <p data-text="heroDesc">
+                    Rozhoduj se jako hrdina — jejich směr určuješ ty.
+                </p>
 
                 <form class="email-form">
-                    <input type="email" placeholder="Zadejte e-mail" aria-label="E-mail" required>
-                    <button type="submit">Začít</button>
+                    <input type="email" placeholder="Zadejte e-mail" aria-label="E-mail" required />
+                    <button data-text="heroCta" type="submit">Začít</button>
                 </form>
             </div>
         </main>
 
-
-        <h1 class="section-title" data-text="sectiontitle">Proč zrovna Moodoo?</h1>
+        <h1 class="section-title" data-text="sectiontitle">
+            Proč zrovna Moodoo?
+        </h1>
         <section class="features">
             <div class="feature-card">
-                <h3 data-text="feature1Title"><svg width="66" height="66" viewBox="0 0 66 66" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+                <h3 data-text="feature1Title">
+                    <svg width="66" height="66" viewBox="0 0 66 66" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M48 3H63M63 3V18M63 3L44.25 21.75M3 63L21.75 44.25M48 63H63M63 63V48M63 63L3 3"
                             stroke="#DAA050" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </h3>
-                <p data-text="feature1Desc">Nové filmy a série přicházejí pravidelně, stejně jako exkluzivní originály a
-                    největší tituly od hollywoodských studií.</p>
+                <p data-text="feature1Desc">
+                    Nové filmy a série přicházejí pravidelně, stejně jako exkluzivní
+                    originály a největší tituly od hollywoodských studií.
+                </p>
                 <div class="discover">
                     <a href="#" data-text="discover">Zjistit více</a>
                 </div>
             </div>
             <div class="feature-card">
-                <h3 data-text="feature2Title"><svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <h3 data-text="feature2Title">
+                    <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M59.0166 50.1316L50.1295 59.0197C49.8198 59.3304 49.4519 59.5769 49.0468 59.7452C48.6417 59.9134 48.2074 60 47.7688 60C47.3302 60 46.8959 59.9134 46.4908 59.7452C46.0857 59.5769 45.7178 59.3304 45.4081 59.0197L36.521 50.1316C35.8949 49.5054 35.5432 48.6562 35.5432 47.7707C35.5432 46.8852 35.8949 46.0359 36.521 45.4098C37.147 44.7836 37.9962 44.4319 38.8816 44.4319C39.767 44.4319 40.6162 44.7836 41.2423 45.4098L44.4389 48.6067V35.8301L29.9972 21.387L15.5556 35.8301V48.6067L18.7522 45.407C19.3783 44.7809 20.2274 44.4291 21.1128 44.4291C21.9982 44.4291 22.8474 44.7809 23.4735 45.407C24.0996 46.0332 24.4513 46.8824 24.4513 47.7679C24.4513 48.6534 24.0996 49.5027 23.4735 50.1288L14.5863 59.0169C14.2767 59.3276 13.9088 59.5742 13.5037 59.7424C13.0986 59.9106 12.6643 59.9972 12.2256 59.9972C11.787 59.9972 11.3527 59.9106 10.9476 59.7424C10.5425 59.5742 10.1746 59.3276 9.86499 59.0169L0.977816 50.1288C0.351731 49.5027 0 48.6534 0 47.7679C0 46.8824 0.351731 46.0332 0.977816 45.407C1.6039 44.7809 2.45305 44.4291 3.33847 44.4291C4.22389 44.4291 5.07304 44.7809 5.69913 45.407L8.89018 48.6067V34.4413C8.88983 34.0035 8.97575 33.5699 9.14301 33.1653C9.31027 32.7607 9.5556 32.393 9.86499 32.0832L26.6645 15.2764V3.33303C26.6645 2.44906 27.0156 1.60129 27.6407 0.976223C28.2657 0.351158 29.1133 0 29.9972 0C30.8811 0 31.7288 0.351158 32.3538 0.976223C32.9788 1.60129 33.3299 2.44906 33.3299 3.33303V15.2764L50.1295 32.0749C50.4398 32.3856 50.6857 32.7547 50.853 33.1608C51.0203 33.5669 51.1057 34.0021 51.1043 34.4413V48.6067L54.3009 45.407C54.6109 45.097 54.9789 44.851 55.3839 44.6833C55.789 44.5155 56.2231 44.4291 56.6615 44.4291C57.0999 44.4291 57.5341 44.5155 57.9391 44.6833C58.3441 44.851 58.7122 45.097 59.0222 45.407C59.3322 45.7171 59.5781 46.0851 59.7459 46.4902C59.9136 46.8953 60 47.3295 60 47.7679C60 48.2064 59.9136 48.6405 59.7459 49.0456C59.5781 49.4507 59.3322 49.8188 59.0222 50.1288L59.0166 50.1316Z"
                             fill="#DAA050" />
                     </svg>
                 </h3>
-                <p data-text="feature2Desc">Sledujte bez přerušení na jakémkoli zařízení. Nastavte profily pro každého
-                    člena domácnosti a uložte své oblíbené.</p>
+                <p data-text="feature2Desc">
+                    Sledujte bez přerušení na jakémkoli zařízení. Nastavte profily pro
+                    každého člena domácnosti a uložte své oblíbené.
+                </p>
                 <div class="discover">
                     <a href="#" data-text="discover">Zjistit více</a>
                 </div>
             </div>
             <div class="feature-card">
-                <h3 data-text="feature3Title"><svg width="52" height="60" viewBox="0 0 52 60" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+                <h3 data-text="feature3Title">
+                    <svg width="52" height="60" viewBox="0 0 52 60" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M45.5 0H6.5C2.925 0 0 2.7 0 6V54C0 57.3 2.925 60 6.5 60H45.5C49.075 60 52 57.3 52 54V6C52 2.7 49.075 0 45.5 0ZM16.25 6H22.75V21L19.5 18.75L16.25 21V6ZM45.5 54H6.5V6H9.75V33L19.5 26.25L29.25 33V6H45.5V54Z"
                             fill="#DAA050" />
                     </svg>
                 </h3>
-                <p data-text="feature3Desc">Najděte přesně to, co chcete, aniž byste ztráceli čas. Doporučení se učí z
-                    vašich preferencí.</p>
+                <p data-text="feature3Desc">
+                    Najděte přesně to, co chcete, aniž byste ztráceli čas. Doporučení se
+                    učí z vašich preferencí.
+                </p>
                 <div class="discover">
                     <a href="#" data-text="discover">Zjistit více</a>
                 </div>
@@ -729,157 +761,48 @@
         </section>
 
         <section class="showcase">
-            <h2 class="carousel-title" style="font-size:1.8rem; margin-bottom:18px; font-weight:800; padding-left:48px;"
-                data-text="showcaseTitle">Co se právě hraje</h2>
-            <div class="movie-grid" style="padding: 0 48px 0 48px;">
-                <div class="movie-card"><img src="images/Uvodni 2.jpg" alt="Show 1"></div>
-                <div class="movie-card"><img src="images/uvodni 3.jpg" alt="Show 2"></div>
-                <div class="movie-card"><img src="images/uvodni 4.jpg" alt="Show 3"></div>
-                <div class="movie-card"><img src="images/uvodni 5.jpg" alt="Show 4"></div>
+            <h2 class="carousel-title" style="
+            font-size: 1.8rem;
+            margin-bottom: 18px;
+            font-weight: 800;
+            padding-left: 48px;
+          " data-text="showcaseTitle">
+                Co se právě hraje
+            </h2>
+            <div class="movie-grid" style="padding: 0 48px 0 48px">
+                <div class="movie-card">
+                    <img src="images/Uvodni 2.jpg" alt="Show 1" />
+                </div>
+                <div class="movie-card">
+                    <img src="images/uvodni 3.jpg" alt="Show 2" />
+                </div>
+                <div class="movie-card">
+                    <img src="images/uvodni 4.jpg" alt="Show 3" />
+                </div>
+                <div class="movie-card">
+                    <img src="images/uvodni 5.jpg" alt="Show 4" />
+                </div>
             </div>
         </section>
 
         <footer class="footer">
-            <p data-text="footer">Prozkoumejte Moodoo — vaši novou domovskou stránku pro filmy a seriály.</p>
+            <p data-text="footer">
+                Prozkoumejte Moodoo — vaši novou domovskou stránku pro filmy a
+                seriály.
+            </p>
         </footer>
     </div>
     <script>
-        const strings = {
-            cs: {
-                news: 'Novinky',
-                categories: 'Kategorie',
-                signIn: 'Přihlásit se',
-                heroTitle: 'Příběhy, které se rozhodují s tebou.',
-                heroDesc: 'Rozhoduj se jako hrdina — jejich  směr určuješ ty.',
-                placeholder: 'Zadejte e-mail',
-                cta: 'Začít',
-                footer: 'Prozkoumejte Moodoo — vaši novou domovskou stránku pro filmy a seriály.',
-                switchLabel: '🇨🇿 CS',
-                feature1Desc: 'Nejen čteš. Rozhoduješ.',
-                discover: 'Zjistit více',
-                sectiontitle: 'Proč zrovna Moodoo?',
-                feature2Desc: 'Každý příběh má víc konců',
-                feature3Desc: 'Mezi knihou a hrou',
-                showcaseTitle: 'Tohle teď čte každý.',
-                languageName: 'Čeština'
-            },
-            en: {
-                watch: 'Watch',
-                news: 'News',
-                categories: 'Categories',
-                signIn: 'Sign In',
-                heroTitle: 'Stories that evolve with you.',
-                heroDesc: 'Decide like a hero — you lead the way.',
-                placeholder: 'Enter your email',
-                cta: 'Start',
-                footer: 'Explore Moodoo — your new home for movies and series.',
-                feature1Desc: 'Don\'t just read. Decide.',
-                discover: 'Discover more',
-                sectiontitle: 'Why Moodoo?',
-                feature2Desc: 'Every story has multiple endings',
-                feature3Desc: 'Part book, part game',
-                showcaseTitle: 'Trending now',
-                languageName: 'English'
-            },
-            es: {
-                watch: 'Ver',
-                news: 'Novedades',
-                categories: 'Categorías',
-                signIn: 'Iniciar sesión',
-                heroTitle: 'Historias que tú decides.',
-                heroDesc: 'Decide como un héroe: tú marcas el camino.',
-                placeholder: 'Introduce tu correo',
-                cta: 'Comenzar',
-                footer: 'Explora Moodoo: tu nuevo hogar para películas y series.',
-                feature1Desc: 'No solo lees. Decides.',
-                discover: 'Descubre más',
-                sectiontitle: '¿Por qué Moodoo?',
-                feature2Desc: 'Cada historia tiene múltiples finales',
-                feature3Desc: 'Parte libro, parte juego',
-                showcaseTitle: 'Lo más leído',
-                switchLabel: '🇪🇸 ES',
-                languageName: 'Español'
-            },
-            de: {
-                watch: 'Ansehen',
-                news: 'Neuheiten',
-                categories: 'Kategorien',
-                signIn: 'Anmelden',
-                heroTitle: 'Geschichten, die du entscheidest.',
-                heroDesc: 'Wähle wie ein Held — du weist ihnen den Weg.',
-                placeholder: 'Gib deine E-Mail ein',
-                cta: 'Starten',
-                footer: 'Entdecke Moodoo – dein neues Zuhause für Filme und Serien.',
-                feature1Desc: 'Nicht nur lesen. Entscheiden.',
-                discover: 'Entdecke mehr',
-                sectiontitle: 'Warum Moodoo?',
-                feature2Desc: 'Jede Geschichte hat mehrere Enden',
-                feature3Desc: 'Teil Buch, Teil Spiel',
-                showcaseTitle: 'Aktuelle Toptitel',
-                switchLabel: '🇩🇪 DE',
-                languageName: 'Deutsch'
-            }
-        };
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
 
-        let currentLang = 'en';
-
-        const langToggle = document.querySelector('.lang-toggle');
-        const langMenu = document.querySelector('.lang-menu');
-        const langItems = document.querySelectorAll('.lang-item');
-
-        const updateLanguage = (lang) => {
-            document.querySelectorAll('[data-text]').forEach(el => {
-                const key = el.dataset.text;
-                if (strings[lang][key]) {
-                    el.textContent = strings[lang][key];
-                }
-            });
-            document.documentElement.lang = lang;
-            document.querySelector('input[type="email"]').placeholder = strings[lang].placeholder;
-            document.querySelector('.email-form button').textContent = strings[lang].cta;
-            langItems.forEach(item => {
-                item.classList.toggle('active', item.dataset.lang === lang);
-            });
-            document.querySelector('.lang-current').textContent = strings[lang].languageName;
-            langMenu.classList.remove('open');
-            langToggle.setAttribute('aria-expanded', 'false');
-        };
-
-        langToggle.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const expanded = langMenu.classList.toggle('open');
-            langToggle.setAttribute('aria-expanded', String(expanded));
+        menuToggle?.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            menuToggle.classList.toggle("open", isOpen);
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
         });
 
-        langItems.forEach(item => {
-            item.addEventListener('click', () => {
-                currentLang = item.dataset.lang;
-                updateLanguage(currentLang);
-            });
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!event.target.closest('.lang-dropdown')) {
-                langMenu.classList.remove('open');
-                langToggle.setAttribute('aria-expanded', 'false');
-            }
-            if (!event.target.closest('.navbar')) {
-                navLinks.classList.remove('open');
-                menuToggle.classList.remove('open');
-                menuToggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        menuToggle?.addEventListener('click', () => {
-            const isOpen = navLinks.classList.toggle('open');
-            menuToggle.classList.toggle('open', isOpen);
-            menuToggle.setAttribute('aria-expanded', String(isOpen));
-        });
-
-        updateLanguage(currentLang);
+        MoodooLang.init();
     </script>
 </body>
 

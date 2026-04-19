@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moodoo - Přihlášení</title>
+    <script src="lang.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
@@ -27,7 +28,7 @@
 
         body {
             min-height: 100vh;
-             content: '';
+            content: '';
             background: linear-gradient(180deg, #12161A, rgba(0, 0, 0, 0.9)),
                 url('images/image\ 21.png') center/cover no-repeat;
             background-repeat: no-repeat;
@@ -195,27 +196,27 @@
 
 <body>
 
-        <section class="login-panel">
-            <div>
-                <h2>Přihlášení</h2>
-                <p class="small-text">Zadejte své údaje a pokračujte ke své oblíbené zábavě.</p>
-            </div>
+    <section class="login-panel">
+        <div>
+            <h2 data-text="loginTitle">Přihlášení</h2>
+            <p class="small-text" data-text="loginSubtitle">Zadejte své údaje a pokračujte ke své oblíbené zábavě.</p>
+        </div>
 
-            <form class="login-form">
-                <label for="email">E-mail</label>
-                <input id="email" type="email" placeholder="vas@email.cz" required>
+        <form class="login-form">
+            <label for="email" data-text="labelEmail">E-mail</label>
+            <input id="email" type="email" data-placeholder="emailPlaceholder" placeholder="vas@email.cz" required>
 
-                <label for="password">Heslo</label>
-                <input id="password" type="password" placeholder="Heslo" required>
+            <label for="password" data-text="labelPassword">Heslo</label>
+            <input id="password" type="password" data-placeholder="passwordPlaceholder" placeholder="Heslo" required>
 
-                <button type="submit">Přihlásit se</button>
-                <p class="message" id="message"></p>
-            </form>
+            <button type="submit" data-text="loginBtn">Přihlásit se</button>
+            <p class="message" id="message"></p>
+        </form>
 
-            <p class="small-text">Nemáte účet? <a href="index.html" style="color: var(--accent);">Začněte zde</a></p>
-            <p class="small-text">Admin login: <strong>admin@moodoo.cz</strong> / <strong>moodoo123</strong></p>
-            <a class="back-link" href="index.html">← Zpět na domovskou stránku</a>
-        </section>
+        <p class="small-text"><span data-text="noAccount">Nemáte účet?</span> <a href="index.html"
+                style="color:var(--accent);" data-text="startHere">Začněte zde</a></p>
+        <p class="small-text" data-text="adminHint">Admin login: admin@moodoo.cz / moodoo123</p>
+    </section>
     <script>
         const storedUsersKey = 'moodooUsers';
         const defaultUsers = [
@@ -245,20 +246,21 @@
 
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const user = users.find((item) => item.email === email && item.password === password);
+            const user = users.find(item => item.email === email && item.password === password);
+            const s = MoodooLang.get(MoodooLang.getLang());
 
             if (user) {
-                message.textContent = `Přihlášení proběhlo úspěšně. Vítejte, ${user.name}!`;
+                message.textContent = s.loginSuccess + user.name + '!';
                 message.style.color = '#7ef3a1';
                 localStorage.setItem('moodooCurrentUser', JSON.stringify({ email: user.email, name: user.name }));
-                setTimeout(() => {
-                    window.location.href = 'home.html';
-                }, 600);
+                setTimeout(() => window.location.href = 'home.html', 600);
             } else {
-                message.textContent = 'Nesprávný e-mail nebo heslo. Zkuste to znovu.';
+                message.textContent = s.loginError;
                 message.style.color = '#ff7f7f';
             }
         });
+
+        MoodooLang.init();
     </script>
 </body>
 

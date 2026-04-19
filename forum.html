@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,7 +42,7 @@
             align-items: center;
             padding: 24px 0;
             z-index: 10;
-            border-right: 1px solid rgba(255,255,255,0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .logo {
@@ -67,16 +68,16 @@
             display: flex;
             flex-direction: column;
             gap: 30px;
-            width: auto; 
+            width: auto;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             position: fixed;
             top: 0;
             left: 0;
-            right: auto;    
+            right: auto;
             padding-left: 20px;
-            
+
         }
 
         .nav-item {
@@ -122,54 +123,54 @@
         }
 
         /* Hero Section */
-       .hero {
-    position: relative;
-    flex: 1;
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-    padding: 40px 60px;
-    
-    /* Kombinace gradientu zleva (pro čitelnost textu) a obrázku na pozadí */
-    background: linear-gradient(90deg, #0a0a0a 10%, rgba(10, 10, 10, 0.8) 40%, transparent 100%),
+        .hero {
+            position: relative;
+            flex: 1;
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            padding: 40px 60px;
+
+            /* Kombinace gradientu zleva (pro čitelnost textu) a obrázku na pozadí */
+            background: linear-gradient(90deg, #0a0a0a 10%, rgba(10, 10, 10, 0.8) 40%, transparent 100%),
                 url('images/Title.jpg');
-    
-    /* Klíčové vlastnosti pro správné zobrazení obrázku */
-    background-position: right 15%;
-    background-size: 50%;
-    background-repeat: no-repeat;
-    
-    /* Pokud používáš tmavý motiv, zajistíme barvu textu */
-    color: #ffffff;
-}
 
-/* Tmavý fade odspodu pro plynulý přechod k dalšímu obsahu */
-.hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 150px;
-    /* Ujisti se, že proměnná --bg-dark odpovídá barvě zbytku stránky */
-    background: linear-gradient(to top, var(--bg-dark, #0a0a0a), transparent);
-    pointer-events: none;
-}
+            /* Klíčové vlastnosti pro správné zobrazení obrázku */
+            background-position: right 15%;
+            background-size: 50%;
+            background-repeat: no-repeat;
 
-.hero-content {
-    margin-top: 15%;
-    max-width: 500px;
-    z-index: 2;
-}
+            /* Pokud používáš tmavý motiv, zajistíme barvu textu */
+            color: #ffffff;
+        }
 
-.hero-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 12px;
-    /* Trocha stínu pro lepší čitelnost na členitém pozadí */
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-}
+        /* Tmavý fade odspodu pro plynulý přechod k dalšímu obsahu */
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 150px;
+            /* Ujisti se, že proměnná --bg-dark odpovídá barvě zbytku stránky */
+            background: linear-gradient(to top, var(--bg-dark, #0a0a0a), transparent);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            margin-top: 15%;
+            max-width: 500px;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            /* Trocha stínu pro lepší čitelnost na členitém pozadí */
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
 
         .trending-badge {
             font-size: 1.1rem;
@@ -253,11 +254,13 @@
             gap: 20px;
             overflow-x: auto;
             padding-bottom: 20px;
-            scrollbar-width: none; /* Firefox */
+            scrollbar-width: none;
+            /* Firefox */
         }
-       
+
         .carousel::-webkit-scrollbar {
-            display: none; /* Chrome/Safari */
+            display: none;
+            /* Chrome/Safari */
         }
 
         .card {
@@ -295,7 +298,7 @@
                 align-items: center;
                 padding: 18px 20px;
                 border-right: none;
-                border-bottom: 1px solid rgba(255,255,255,0.08);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             }
 
             .nav-menu {
@@ -375,31 +378,42 @@
                 height: 240px;
             }
         }
-
     </style>
 </head>
+
 <body>
 
     <aside class="sidebar">
         <nav class="nav-menu">
             <div class="nav-item" id="openSearch">
-                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <svg viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
             </div>
             <div class="nav-item" id="openHome">
-                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
             </div>
             <div class="nav-item active" id="openMessages">
-                <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
             </div>
             <div class="nav-item" id="openSettings">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
             </div>
         </nav>
     </aside>
 
     <main class="main-content">
-       
-       
+
+
     </main>
     <script>
         const currentUser = localStorage.getItem('moodooCurrentUser');
@@ -424,10 +438,11 @@
         document.getElementById('openSettings')?.addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
-        
-           document.getElementById('openHome')?.addEventListener('click', () => {
+
+        document.getElementById('openHome')?.addEventListener('click', () => {
             window.location.href = 'home.html';
         });
     </script>
 </body>
+
 </html>

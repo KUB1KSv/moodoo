@@ -1,378 +1,567 @@
 <html lang="cs">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moodoo - Kafka's Metamorphosis</title>
-    <script src="lang.js"></script>
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
-      @import url("https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-      :root {
-        --bg-dark: #0a0a0a;
-        --bg-sidebar: #0f0f0f;
-        --primary-red: #d44543;
-        --text-main: #ffffff;
-        --text-muted: #a0a0a0;
-        --btn-hover: rgb(199, 54, 43);
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moodoo - Kafka's Metamorphosis</title>
+  <script src="lang.js"></script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+    @import url("https://fonts.googleapis.com/css2?family=Aclonica&family=Encode+Sans:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: "Inter", sans-serif;
-      }
+    :root {
+      --bg-dark: #0a0a0a;
+      --bg-sidebar: #0f0f0f;
+      --primary-red: #d44543;
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+      --btn-hover: rgb(199, 54, 43);
+    }
 
-      body {
-        background-color: #12161a;
-        color: var(--text-main);
-        display: flex;
-        min-height: 100vh;
-        overflow-x: hidden;
-        overflow-y: auto;
-      }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", sans-serif;
+    }
 
-      /* --- SIDEBAR --- */
-      .sidebar {
-        width: 80px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 24px 0;
-        z-index: 10;
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
-        transition: filter 0.3s ease;
-        background-color: #12161a;
-      }
+    body {
+      background-color: #12161a;
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* --- SIDEBAR --- */
+    .sidebar {
+      width: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+      z-index: 10;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      transition: filter 0.3s ease;
+      background-color: #12161a;
+    }
 
 
-      .nav-menu {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        width: auto;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-        padding-left: 20px;
-      }
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      width: auto;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-left: 20px;
+    }
 
-      .nav-item {
-        color: var(--text-muted);
-        cursor: pointer;
-        transition: color 0.2s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 40px;
-        height: 40px;
-      }
+    .nav-item {
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+    }
 
-      .nav-item svg {
-        width: 24px;
-        height: 24px;
-        stroke: currentColor;
-        stroke-width: 2;
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
+    .nav-item svg {
+      width: 24px;
+      height: 24px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
 
-      .nav-item:hover {
-        color: var(--text-main);
-      }
+    .nav-item:hover {
+      color: var(--text-main);
+    }
 
-      .nav-item.active {
-        color: var(--primary-red);
-      }
+    .nav-item.active {
+      color: var(--primary-red);
+    }
 
-      /* --- MAIN CONTENT --- */
-      .main-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        overflow-y: auto;
-        transition: filter 0.3s ease;
-      }
+    /* --- MAIN CONTENT --- */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-y: auto;
+      transition: filter 0.3s ease;
+    }
 
-      /* When modal is open, dim everything except the modal */
-      body.modal-open .main-content,
-      body.modal-open .sidebar {
-        filter: brightness(0.15);
-        pointer-events: none;
-      }
+    /* When modal is open, dim everything except the modal */
+    body.modal-open .main-content,
+    body.modal-open .sidebar {
+      filter: brightness(0.15);
+      pointer-events: none;
+    }
 
-      .pozadi {
-        background-color: #12161a;
-        background:
-          linear-gradient(
-            90deg,
-            #12161a 1%,
-            rgba(10, 10, 10, 0.8) 45%,
-            transparent 100%
-          ),
-          url("images/Title.jpg");
-        background-position: right center;
-        background-size: auto 100%;
-        background-repeat: no-repeat;
-      }
+    .pozadi {
+      background:
+        linear-gradient(to right,
+          #12161a 0%,
+          #12161a 35%,
+          rgba(18, 22, 26, 0.85) 55%,
+          rgba(18, 22, 26, 0.1) 100%),
+        url("images/Title.jpg") right top / auto 100% no-repeat;
+         background-position-y: -150px;
+    }
 
-      /* Hero Section */
-      .hero {
-        position: relative;
-        flex: 1;
-        min-height: 60vh;
-        display: grid;
-        align-items: center;
-        padding: 40px 60px;
-        color: #ffffff;
-      }
+    /* Hero Section */
+    .hero {
+      position: relative;
+      flex: 1;
+      min-height: 60vh;
+      display: grid;
+      align-items: center;
+      padding: 40px 60px;
+      color: #ffffff;
+    }
 
-      .hero-content {
-        max-width: 500px;
-        z-index: 2;
-      }
+    .hero-content {
+      max-width: 500px;
+      z-index: 2;
+    }
 
-      .hero-title {
-        padding-top: 80px;
-        font-size: 3.5rem;
-        font-family: "Aclonica", sans-serif;
-        font-weight: 400;
-        line-height: 1.1;
-        margin-bottom: 12px;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      }
+    .hero-title {
+      padding-top: 80px;
+      font-size: 3.5rem;
+      font-family: "Aclonica", sans-serif;
+      font-weight: 400;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
 
-      .popup-title {
-        font-size: 3.5rem;
-        font-family: "Encode Sans", sans-serif;
-        font-weight: 700;
-        line-height: 1.1;
-        margin-bottom: 12px;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      }
+    .popup-title {
+      font-size: 3.5rem;
+      font-family: "Encode Sans", sans-serif;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
 
-      .trending-badge {
-        font-size: 1.1rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-      }
+    .trending-badge {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
 
-      .trending-badge span {
-        color: var(--primary-red);
-      }
+    .trending-badge span {
+      color: var(--primary-red);
+    }
 
-      .hero-desc {
-        color: var(--text-muted);
-        font-family: "Encode Sans", sans-serif;
-        font-size: 1rem;
-        line-height: 1.6;
-        margin-bottom: 30px;
-      }
+    .hero-desc {
+      color: var(--text-muted);
+      font-family: "Encode Sans", sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
 
-      .buttons {
-        display: flex;
-        gap: 16px;
-      }
+    .buttons {
+      display: flex;
+      gap: 16px;
+    }
 
-      .btn {
-        border-radius: 14px;
-        font-family: "Inter", sans-serif;
-        font-size: 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        border: none;
-        transition: all 0.2s;
-      }
+    .btn {
+      border-radius: 14px;
+      font-family: "Inter", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
 
-      .btn-primary {
-        padding: 10px 62px;
-        background-color: var(--primary-red);
-        color: white;
-      }
+    .btn-primary {
+      padding: 10px 62px;
+      background-color: var(--primary-red);
+      color: white;
+    }
 
-      .btn-primary:hover {
-        background-color: var(--btn-hover);
-      }
+    .btn-primary:hover {
+      background-color: var(--btn-hover);
+    }
 
-      .btn-secondary {
-        padding: 10px 32px;
-        background-color: #daa1503d;
-        color: var(--text-main);
-        border: 1px solid #daa050;
-      }
+    .btn-secondary {
+      padding: 10px 32px;
+      background-color: #daa1503d;
+      color: var(--text-main);
+      border: 1px solid #daa050;
+    }
 
-      .btn-secondary-popup {
-        padding: 10px 62px;
-        background-color: #daa1503d;
-        color: var(--text-main);
-        border: 1px solid #daa050;
-      }
+    .btn-secondary-popup {
+      padding: 10px 62px;
+      background-color: #daa1503d;
+      color: var(--text-main);
+      border: 1px solid #daa050;
+    }
 
-      .btn-secondary:hover {
-        background-color: #daa15054;
-      }
+    .btn-secondary:hover {
+      background-color: #daa15054;
+    }
 
-      .age-rating {
-        position: absolute;
-        right: 40px;
-        bottom: 40px;
-        background-color: #daa050;
-        color: #ffffff;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-family: "Encode Sans", sans-serif;
-        font-weight: 700;
-        font-size: 1.1rem;
-        z-index: 2;
-      }
+    .age-rating {
+      position: absolute;
+      right: 40px;
+      bottom: 40px;
+      background-color: #daa050;
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-family: "Encode Sans", sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      z-index: 2;
+    }
 
-      /* --- CAROUSEL --- */
-      .carousel-section {
-        position: relative;
-        padding: 0 60px 40px 60px;
-      }
+    /* --- CAROUSEL --- */
+    .carousel-section {
+      position: relative;
+      padding: 0 60px 40px 60px;
+    }
 
-      .carousel-section2 {
-        position: relative;
-        padding: 0 60px 40px 60px;
-        background: #12161a;
-      }
+    .carousel-section2 {
+      position: relative;
+      padding: 0 60px 40px 60px;
+      background: #12161a;
+    }
 
-      .carousel-title {
-        position: relative;
-        padding-top: 50px;
-        font-family: "Encode Sans", sans-serif;
-        font-size: 1.5rem;
-        margin-bottom: 20px;
-        font-weight: 700;
-        z-index: 10;
-      }
+    .carousel-title {
+      position: relative;
+      padding-top: 50px;
+      font-family: "Encode Sans", sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+      z-index: 10;
+    }
 
-      .carousel::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 400px;
-        background: linear-gradient(
-          to top,
+    .carousel::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 400px;
+      background: linear-gradient(to top,
           #12161a 10%,
           #12161a 40%,
-          transparent 100%
-        );
-        pointer-events: none;
-        z-index: 5;
+          transparent 100%);
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 10px;
+      overflow-x: scroll;
+      cursor: grab;
+      user-select: none;
+      scroll-behavior: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel>* {
+      will-change: transform;
+      flex-shrink: 0;
+    }
+
+    .card {
+      min-width: 180px;
+      height: 270px;
+      background-color: #222;
+      border-radius: 2px;
+      overflow: hidden;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.3s;
+      z-index: 9;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* --- MODAL --- */
+    /* The modal lives directly under <body>, so z-index works globally */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 99999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Semi-transparent clickable backdrop */
+    .modal-backdrop {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-obsah {
+      position: relative;
+      z-index: 1;
+      background-color: #12161a;
+      padding: 18px;
+      border-radius: 12px;
+      max-width: 1000px;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      gap: 20px;
+    }
+
+    .zavrit {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      font-size: 28px;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    .zavrit:hover {
+      color: var(--text-main);
+    }
+
+    .obrazek img {
+      width: 380px;
+      height: 550px;
+      object-fit: cover;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    .text-popup {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bigger-image {
+      height: auto;
+      width: 20%;
+    }
+
+    .text-popup h3 {
+      color: var(--text-main);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .text-popup p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .popup-title {
+      font-family: encode sans, sans-serif;
+      font-weight: 600;
+    }
+
+    /* Kontejner ikony */
+    #openSettings {
+      position: relative;
+      /* Tohle zvětšuje plochu, na kterou se dá najet */
+    }
+
+    .side-dropdown {
+      display: none;
+      position: absolute;
+
+      /* Pozice: hned vedle ikony */
+      top: 0;
+      left: 100%;
+
+      /* Tohle je ten MOST: */
+      /* Menu začíná hned u ikony, ale vnitřek posuneme */
+      padding-left: 5px;
+
+      z-index: 100;
+    }
+
+    /* Vnitřní box, který uživatel skutečně uvidí */
+    .dropdown-content {
+      background: #12161a;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border: 1px solid #daa050;
+      border-radius: 10px;
+      min-width: 120px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Zobrazení při najetí */
+    #openSettings:hover .side-dropdown {
+      display: block;
+    }
+
+    /* Styly odkazů */
+    .dropdown-content a {
+      color: #ffffff;
+      padding: 8px 12px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #232b33;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 1024px) {
+  .pozadi {
+    background:
+      linear-gradient(
+        to right,
+        #12161a 0%,
+        #12161a 45%,
+        rgba(18, 22, 26, 0.9) 70%,
+        rgba(18, 22, 26, 0.4) 100%
+      ),
+      url("images/Title.jpg") right center / cover no-repeat;
+  }
+}
+
+@media (min-width: 2500px) {
+  .pozadi {
+    background:
+      linear-gradient(
+        to right,
+        #12161a 0%,
+        #12161a 30%,
+        rgba(18, 22, 26, 0.85) 50%,
+        rgba(18, 22, 26, 0.1) 100%
+      ),
+      url("images/Title.jpg") right top / auto 110% no-repeat;
+      background-position-y: -350px;
+  }
+}
+
+@media (min-width: 1540px) and (max-width: 2499px) {
+  .pozadi {
+    background:
+      linear-gradient(
+        to right,
+        #12161a 0%,
+        #12161a 32%,
+        rgba(18, 22, 26, 0.85) 52%,
+        rgba(18, 22, 26, 0.1) 100%
+      ),
+      url("images/Title.jpg") right top / auto 105% no-repeat;
+      background-position-y: -350px;
+  }
+}
+
+@media (max-width: 680px) {
+  .pozadi {
+    background:
+      linear-gradient(
+        to bottom,
+        rgba(18, 22, 26, 0.6) 0%,
+        #12161a 50%
+      ),
+      url("images/Title.jpg") center top / cover no-repeat;
+  }
+}
+
+    @media (min-width: 1540px) {
+      .card {
+        min-width: 380px;
+        height: 550px;
       }
 
       .carousel {
-        display: flex;
-        gap: 10px;
-        overflow-x: scroll;
-        cursor: grab;
-        user-select: none;
-        scroll-behavior: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-
-      .carousel::-webkit-scrollbar {
-        display: none;
-      }
-
-      .carousel > * {
-        will-change: transform;
-        flex-shrink: 0;
-      }
-
-      .card {
-        min-width: 180px;
-        height: 270px;
-        background-color: #222;
-        border-radius: 2px;
-        overflow: hidden;
-        flex-shrink: 0;
-        cursor: pointer;
-        transition: transform 0.3s;
-        z-index: 9;
-      }
-
-      .card:hover {
-        transform: scale(1.05);
-      }
-
-      .card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      /* --- MODAL --- */
-      /* The modal lives directly under <body>, so z-index works globally */
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 99999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        justify-content: center;
-        align-items: center;
-      }
-
-      /* Semi-transparent clickable backdrop */
-      .modal-backdrop {
-        position: absolute;
-        background: rgba(0, 0, 0, 0.6);
-      }
-
-      .modal-obsah {
-        position: relative;
-        z-index: 1;
-        background-color: #12161a;
-        padding: 18px;
-        border-radius: 12px;
-        max-width: 1000px;
-        max-height: 90vh;
-        overflow-y: auto;
-        display: flex;
         gap: 20px;
       }
 
-      .zavrit {
-        position: absolute;
-        top: 14px;
-        right: 18px;
-        font-size: 28px;
-        cursor: pointer;
-        color: var(--text-muted);
-        line-height: 1;
-        transition: color 0.2s;
+      .carousel-title {
+        font-size: 2.5rem;
       }
 
-      .zavrit:hover {
-        color: var(--text-main);
+      .hero-content {
+        max-width: 1000px;
       }
 
-      .obrazek img {
-        width: 380px;
-        height: 550px;
-        object-fit: cover;
-        border-radius: 8px;
-        flex-shrink: 0;
+      .hero-title {
+        font-size: 4.5rem;
       }
 
-      .text-popup {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+      .trending-badge {
+        font-size: 2.1rem;
+      }
+
+      .hero-desc {
+        font-size: 2rem;
+      }
+
+      .btn {
+        border-radius: 24px;
+        font-size: 2rem;
+      }
+
+      .btn-primary {
+        padding: 10px 82px;
+      }
+
+      .btn-secondary {
+        padding: 10px 52px;
+        border: 2px solid #daa050;
+      }
+
+      .age-rating {
+        padding: 8px 22px;
+        border-radius: 6px;
+        font-size: 2.1rem;
+      }
+
+      .nav-item svg {
+        width: 34px;
+        height: 34px;
+      }
+
+      .nav-menu {
+        gap: 50px;
+      }
+
+      .popup-title {
+        font-size: 5.5rem;
+        font-family: "Aclonica", sans-serif;
+        font-weight: 400;
       }
 
       .bigger-image {
@@ -381,589 +570,434 @@
       }
 
       .text-popup h3 {
-        color: var(--text-main);
-        font-size: 0.95rem;
-        font-weight: 700;
-        margin-top: 8px;
+        font-size: 1.95rem;
       }
 
       .text-popup p {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        line-height: 1.5;
+        font-size: 1.9rem;
       }
 
-      .popup-title {
-        font-family: encode sans, sans-serif;
-        font-weight: 600;
+      .obrazek img {
+        width: 700px;
+        height: 950px;
+        object-fit: cover;
+        border-radius: 8px;
+        flex-shrink: 0;
       }
 
-      /* Kontejner ikony */
-      #openSettings {
+      .modal-obsah {
         position: relative;
-        /* Tohle zvětšuje plochu, na kterou se dá najet */
-      }
-
-      .side-dropdown {
-        display: none;
-        position: absolute;
-
-        /* Pozice: hned vedle ikony */
-        top: 0;
-        left: 100%;
-
-        /* Tohle je ten MOST: */
-        /* Menu začíná hned u ikony, ale vnitřek posuneme */
-        padding-left: 5px;
-
-        z-index: 100;
-      }
-
-      /* Vnitřní box, který uživatel skutečně uvidí */
-      .dropdown-content {
-        background: #12161a;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        border: 1px solid #daa050;
-        border-radius: 10px;
-        min-width: 120px;
+        z-index: 1;
+        background-color: #12161a;
+        padding: 18px;
+        border-radius: 12px;
+        max-width: 140vh;
+        max-height: 100vh;
+        overflow-y: auto;
         display: flex;
+        gap: 20px;
+      }
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 1024px) {
+      body {
+        flex-direction: column;
+        min-height: 100vh;
+        height: auto;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 18px 20px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .nav-menu {
+        flex-direction: row;
+        gap: 18px;
+        width: auto;
+        justify-content: center;
+      }
+
+      .hero {
+        min-height: 50vh;
+        padding: 30px 30px 40px;
+      }
+
+      .hero-content {
+        max-width: 100%;
+      }
+
+      .hero-title {
+        font-size: 2.8rem;
+      }
+
+      .buttons {
+        flex-wrap: wrap;
+      }
+
+      .carousel-section {
+        padding: 0 30px 40px 30px;
+      }
+
+      .age-rating {
+        right: 24px;
+        bottom: 24px;
+      }
+
+      .modal-obsah {
+        width: 90%;
         flex-direction: column;
       }
 
-      /* Zobrazení při najetí */
-      #openSettings:hover .side-dropdown {
-        display: block;
+      .obrazek img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .sidebar {
+        padding: 14px 16px;
       }
 
-      /* Styly odkazů */
-      .dropdown-content a {
-        color: #ffffff;
-        padding: 8px 12px;
-        text-decoration: none;
-        font-size: 14px;
+      .nav-menu {
+        gap: 12px;
       }
 
-      .dropdown-content a:hover {
-        background-color: #232b33;
-        border-radius: 10px;
+      .hero {
+        padding: 24px 18px 30px;
       }
 
-      @media (min-width: 1540px) {
-        .card {
-          min-width: 380px;
-          height: 550px;
-        }
-
-        .carousel {
-          gap: 20px;
-        }
-
-        .carousel-title {
-          font-size: 2.5rem;
-        }
-
-        .hero-content {
-          max-width: 1000px;
-        }
-
-        .hero-title {
-          font-size: 4.5rem;
-        }
-
-        .trending-badge {
-          font-size: 2.1rem;
-        }
-
-        .hero-desc {
-          font-size: 2rem;
-        }
-
-        .btn {
-          border-radius: 24px;
-          font-size: 2rem;
-        }
-
-        .btn-primary {
-          padding: 10px 82px;
-        }
-
-        .btn-secondary {
-          padding: 10px 52px;
-          border: 2px solid #daa050;
-        }
-
-        .age-rating {
-          padding: 8px 22px;
-          border-radius: 6px;
-          font-size: 2.1rem;
-        }
-
-        .nav-item svg {
-          width: 34px;
-          height: 34px;
-        }
-
-        .nav-menu {
-          gap: 50px;
-        }
-
-        .pozadi {
-          background-position: right 65%;
-          background-size: 50%;
-        }
-
-        .popup-title {
-          font-size: 5.5rem;
-          font-family: "Aclonica", sans-serif;
-          font-weight: 400;
-        }
-
-        .bigger-image {
-          height: auto;
-          width: 20%;
-        }
-
-        .text-popup h3 {
-          font-size: 1.95rem;
-        }
-
-        .text-popup p {
-          font-size: 1.9rem;
-        }
-
-        .obrazek img {
-          width: 700px;
-          height: 950px;
-          object-fit: cover;
-          border-radius: 8px;
-          flex-shrink: 0;
-        }
-
-        .modal-obsah {
-          position: relative;
-          z-index: 1;
-          background-color: #12161a;
-          padding: 18px;
-          border-radius: 12px;
-          max-width: 140vh;
-          max-height: 100vh;
-          overflow-y: auto;
-          display: flex;
-          gap: 20px;
-        }
+      .hero-title {
+        font-size: 2.2rem;
       }
 
-      /* --- RESPONSIVE --- */
-      @media (max-width: 1024px) {
-        body {
-          flex-direction: column;
-          min-height: 100vh;
-          height: auto;
-        }
-
-        .sidebar {
-          width: 100%;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-          padding: 18px 20px;
-          border-right: none;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .nav-menu {
-          flex-direction: row;
-          gap: 18px;
-          width: auto;
-          justify-content: center;
-        }
-
-        .hero {
-          min-height: 50vh;
-          padding: 30px 30px 40px;
-        }
-
-        .hero-content {
-          max-width: 100%;
-        }
-
-        .hero-title {
-          font-size: 2.8rem;
-        }
-
-        .buttons {
-          flex-wrap: wrap;
-        }
-
-        .carousel-section {
-          padding: 0 30px 40px 30px;
-        }
-
-        .age-rating {
-          right: 24px;
-          bottom: 24px;
-        }
-
-        .modal-obsah {
-          width: 90%;
-          flex-direction: column;
-        }
-
-        .obrazek img {
-          width: 100%;
-          height: 200px;
-        }
+      .hero-desc {
+        font-size: 0.95rem;
       }
 
-      @media (max-width: 680px) {
-        .sidebar {
-          padding: 14px 16px;
-        }
-
-        .nav-menu {
-          gap: 12px;
-        }
-
-        .hero {
-          padding: 24px 18px 30px;
-        }
-
-        .hero-title {
-          font-size: 2.2rem;
-        }
-
-        .hero-desc {
-          font-size: 0.95rem;
-        }
-
-        .buttons {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .buttons .btn {
-          width: 100%;
-        }
-
-        .carousel {
-          gap: 14px;
-        }
-
-        .card {
-          min-width: 150px;
-          height: 240px;
-        }
+      .buttons {
+        flex-direction: column;
+        align-items: stretch;
       }
 
-      
-    </style>
-    <style type="text/css" id="operaUserStyle"></style>
-  </head>
+      .buttons .btn {
+        width: 100%;
+      }
 
-  <body class="" style="overflow: auto">
-    <aside class="sidebar">
-      <nav class="nav-menu">
-        <div class="nav-item" id="openSearch">
-          <svg viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-        </div>
-        <div class="nav-item active" id="openHome">
-          <svg viewBox="0 0 24 24">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-        </div>
-        <div class="nav-item" id="openMessages">
-          <svg viewBox="0 0 24 24">
-            <path
-              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-            ></path>
-          </svg>
-        </div>
-        <div class="nav-item" id="openSettings">
-          <svg viewBox="0 0 24 24">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
+      .carousel {
+        gap: 14px;
+      }
 
-          <div class="side-dropdown">
-            <div class="dropdown-content">
-              <a href="profile.html">Profil</a>
-              <a href="#">Odhlásit se</a>
-            </div>
+      .card {
+        min-width: 150px;
+        height: 240px;
+      }
+    }
+  </style>
+  <style type="text/css" id="operaUserStyle"></style>
+</head>
+
+<body class="" style="overflow: auto">
+  <aside class="sidebar">
+    <nav class="nav-menu">
+      <div class="nav-item" id="openSearch">
+        <svg viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <div class="nav-item active" id="openHome">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </div>
+      <div class="nav-item" id="openMessages">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <div class="nav-item" id="openSettings">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+
+        <div class="side-dropdown">
+          <div class="dropdown-content">
+            <a href="profile.html">Profil</a>
+            <a href="#">Odhlásit se</a>
           </div>
         </div>
-      </nav>
-    </aside>
+      </div>
+    </nav>
+  </aside>
 
-    <main class="main-content">
-      <div class="pozadi">
-        <div class="hero">
-          <img class="bigger-image" src="images/image 22.png" alt="" />
-          <div class="hero-content">
-            <h1 class="hero-title">Kafka's<br />Methamorphosis</h1>
-            <p class="trending-badge" data-text="trending">
-              <span>#1</span> v trendech
-            </p>
-            <p
-              id="user-status"
-              class="trending-badge"
-              style="
+  <main class="main-content">
+    <div class="pozadi">
+      <div class="hero">
+        <img class="bigger-image" src="images/image 22.png" alt="" />
+        <div class="hero-content">
+          <h1 class="hero-title">Kafka's<br />Methamorphosis</h1>
+          <p class="trending-badge" data-text="trending">
+            <span>#1</span> v trendech
+          </p>
+          <p id="user-status" class="trending-badge" style="
                 margin-bottom: 20px;
                 color: #f1f1f1;
                 font-size: 1rem;
                 font-weight: 500;
-              "
-            ></p>
-            <p class="hero-desc">
-              Jak se rodina Gregora Samsi vyrovná s jeho proměnou? Zvládnete se
-              rozhodovat správně za Gregora a dojít k happy-endu, nebo obrátíte
-              celou rodinu naruby?
-            </p>
-            <div class="buttons">
-              <button class="btn btn-primary" data-text="readBtn">
-                Přečíst
-              </button>
-              <button
-                class="btn btn-secondary"
-                id="otevritBtn"
-                data-text="moreInfo"
-              >
-                Více informací
-              </button>
-            </div>
-          </div>
-          <div class="age-rating">14+</div>
-        </div>
-
-        <div class="carousel-section">
-          <div class="carousel-all">
-            <h2 class="carousel-title" data-text="comicsTitle">Komiksy</h2>
-          </div>
-          <div class="carousel" style="cursor: grab">
-           
-            <div class="card" onclick="otevritKnihu('kafka')">
-              <div class="card"><img src="images/Title.jpg" /></div>
-              <p>Kafka's Metamorphosis</p>
-            </div>
-
-            <div class="card" onclick="otevritKnihu('Krvavy_mesic')">
-              <div class="card"><img src="images/banner.jpg" /></div>
-              <p>Město v rytmu tlapek</p>
-            </div>
-            <div class="card">
-              <img src="images/Uvodni 2.jpg" alt="Hamlet" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni 3.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni 4.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni 5.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni_bak.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodní.jpg" alt="Wings of Fire 2" />
-            </div>
+              "></p>
+          <p class="hero-desc">
+            Jak se rodina Gregora Samsi vyrovná s jeho proměnou? Zvládnete se
+            rozhodovat správně za Gregora a dojít k happy-endu, nebo obrátíte
+            celou rodinu naruby?
+          </p>
+          <div class="buttons">
+            <button class="btn btn-primary" data-text="readBtn">
+              Přečíst
+            </button>
+            <button class="btn btn-secondary" id="otevritBtn" data-text="moreInfo">
+              Více informací
+            </button>
           </div>
         </div>
-        <div class="carousel-section2">
-          <div class="carousel-all">
-            <h2 class="carousel-title" data-text="books">Knihy</h2>
+        <div class="age-rating">14+</div>
+      </div>
+
+      <div class="carousel-section">
+        <div class="carousel-all">
+          <h2 class="carousel-title" data-text="comicsTitle">Komiksy</h2>
+        </div>
+        <div class="carousel" style="cursor: grab">
+
+          <div class="card" onclick="otevritKnihu('kafka')">
+            <div class="card"><img src="images/Title.jpg" /></div>
+            <p>Kafka's Metamorphosis</p>
           </div>
-          <div class="carousel" style="cursor: grab">
-            
-            <div class="card" onclick="otevritKnihu('mesto_v_rytmu_tlapek')">
-              <div class="card"><img src="images/unnamed.png" /></div>
-              <p>Město v rytmu tlapek</p>
-            </div>
-            
-            <div class="card" onclick="otevritKnihu('Krvavy_mesic')">
-              <div class="card"><img src="images/banner.jpg" /></div>
-              <p>Město v rytmu tlapek</p>
-            </div>
-            <div class="card">
-              <img src="images/Title.jpg" alt="Wings of Fire 1" />
-            </div>
-            <div class="card">
-              <img src="images/Uvodni 2.jpg" alt="Hamlet" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni 3.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni 4.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni 5.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodni_bak.jpg" alt="Wings of Fire 2" />
-            </div>
-            <div class="card">
-              <img src="images/uvodní.jpg" alt="Wings of Fire 2" />
-            </div>
+          
+
+          <div class="card" onclick="otevritKnihu('Krvavy_mesic')">
+            <div class="card"><img src="images/banner.jpg" /></div>
+            <p>Město v rytmu tlapek</p>
+          </div>
+          <div class="card">
+            <img src="images/Uvodni 2.jpg" alt="Hamlet" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni 3.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni 4.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni 5.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni_bak.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodní.jpg" alt="Wings of Fire 2" />
           </div>
         </div>
       </div>
-    </main>
+      <div class="carousel-section2">
+        <div class="carousel-all">
+          <h2 class="carousel-title" data-text="books">Knihy</h2>
+        </div>
+        <div class="carousel" style="cursor: grab">
 
-    <!-- MODAL: directly under <body> so z-index is global and nothing can overlap it -->
-    <div id="mojeOkno" class="modal" style="display: none">
-      <div class="modal-backdrop" id="modalBackdrop"></div>
-      <div class="modal-obsah">
-        <span class="zavrit" id="zavritBtn">×</span>
-       <div class="obrazek" style="width: 40%; height: 100%; flex-shrink: 0; overflow: hidden; border-radius: 8px;">
-    
-    <img id="popup-img" 
-         src="images/Title.jpg" 
-         alt="Obálka knihy" 
-         style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-         
-</div>
-        <div class="text-popup">
-          <h1 class="popup-title" id="popup-nazev">Název knihy</h1>
-          <p class="autor" id="popup-autor">Autor</p>
+          <div class="card" onclick="otevritKnihu('mesto_v_rytmu_tlapek')">
+            <div class="card"><img src="images/unnamed.png" /></div>
+            <p>Město v rytmu tlapek</p>
+          </div>
 
-          <h3 class="popis-popup" data-text="destription">Popis</h3>
-          <p class="textik-popup" id="popup-popis">Popis se načítá...</p>
-
-          <h3 class="zany" data-text="genres">Žánry</h3>
-          <p class="textik-popup" id="popup-zanry">Žánry</p>
-
-          <h3 class="konce" data-text="endings">Konce</h3>
-          <p class="textik-popup" id="popup-konce">0</p>
-
-          <h3 class="doba" data-text="readingTime">Doba čtení</h3>
-          <p class="textik-popup" id="popup-doba">0 min</p>
-
-        
-              <div class="buttons" style="margin-top: 8px; display: flex; justify-content: end; padding-right: 5%; padding-top: 6%;">
-            <a id="btn-precist" href="#" class="btn btn-primary" data-text="readBtn">Přečíst</a>
-             <a id="btn-diskuze" href="#" class="btn btn-secondary-popup" data-text="discussBtn">Diskuze</a>
-            </div>
-            </div>
+          <div class="card" onclick="otevritKnihu('Krvavy_mesic')">
+            <div class="card"><img src="images/banner.jpg" /></div>
+            <p>Město v rytmu tlapek</p>
+          </div>
+          <div class="card">
+            <img src="images/Title.jpg" alt="Wings of Fire 1" />
+          </div>
+          <div class="card">
+            <img src="images/Uvodni 2.jpg" alt="Hamlet" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni 3.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni 4.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni 5.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodni_bak.jpg" alt="Wings of Fire 2" />
+          </div>
+          <div class="card">
+            <img src="images/uvodní.jpg" alt="Wings of Fire 2" />
           </div>
         </div>
       </div>
-      
     </div>
+  </main>
 
-    <script>
-      // --- Carousel drag scroll ---
-      const slider = document.querySelector(".carousel");
-      let isDown = false;
-      let startX;
-      let scrollLeft;
-      let velocity = 0;
-      let rafID;
+  <!-- MODAL: directly under <body> so z-index is global and nothing can overlap it -->
+  <div id="mojeOkno" class="modal" style="display: none">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-obsah">
+      <span class="zavrit" id="zavritBtn">×</span>
+      <div class="obrazek" style="width: 40%; height: 100%; flex-shrink: 0; overflow: hidden; border-radius: 8px;">
 
-      const easeOut = () => {
-        if (Math.abs(velocity) > 0.1) {
-          slider.scrollLeft += velocity;
-          velocity *= 0.95;
-          rafID = requestAnimationFrame(easeOut);
-        }
-      };
+        <img id="popup-img" src="images/Title.jpg" alt="Obálka knihy"
+          style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
 
-      slider.addEventListener("mousedown", (e) => {
-        isDown = true;
-        slider.style.cursor = "grabbing";
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
-        cancelAnimationFrame(rafID);
-      });
+      </div>
+      <div class="text-popup">
+        <h1 class="popup-title" id="popup-nazev">Název knihy</h1>
+        <p class="autor" id="popup-autor">Autor</p>
 
-      slider.addEventListener("mouseleave", () => {
-        isDown = false;
-        slider.style.cursor = "grab";
-      });
-      slider.addEventListener("mouseup", () => {
-        isDown = false;
-        slider.style.cursor = "grab";
-        easeOut();
-      });
+        <h3 class="popis-popup" data-text="destription">Popis</h3>
+        <p class="textik-popup" id="popup-popis">Popis se načítá...</p>
 
-      slider.addEventListener("mousemove", (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        const prevScroll = slider.scrollLeft;
-        slider.scrollLeft = scrollLeft - walk;
-        velocity = slider.scrollLeft - prevScroll;
-      });
+        <h3 class="zany" data-text="genres">Žánry</h3>
+        <p class="textik-popup" id="popup-zanry">Žánry</p>
 
-      // --- Auth check ---
-      const currentUser = localStorage.getItem("moodooCurrentUser");
-      if (!currentUser) {
-        window.location.href = "po_prihlaseni.html";
+        <h3 class="konce" data-text="endings">Konce</h3>
+        <p class="textik-popup" id="popup-konce">0</p>
+
+        <h3 class="doba" data-text="readingTime">Doba čtení</h3>
+        <p class="textik-popup" id="popup-doba">0 min</p>
+
+
+        <div class="buttons"
+          style="margin-top: 8px; display: flex; justify-content: end; padding-right: 5%; padding-top: 6%;">
+          <a id="btn-precist" href="#" class="btn btn-primary" data-text="readBtn">Přečíst</a>
+          <a id="btn-diskuze" href="#" class="btn btn-secondary-popup" data-text="discussBtn">Diskuze</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  </div>
+
+  <script>
+    // --- Carousel drag scroll ---
+    const slider = document.querySelector(".carousel");
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let velocity = 0;
+    let rafID;
+
+    const easeOut = () => {
+      if (Math.abs(velocity) > 0.1) {
+        slider.scrollLeft += velocity;
+        velocity *= 0.95;
+        rafID = requestAnimationFrame(easeOut);
       }
+    };
 
-      // --- Nav links ---
-      document
-        .getElementById("openSearch")
-        ?.addEventListener(
-          "click",
-          () => (window.location.href = "search.html"),
-        );
-      document
-        .getElementById("openMessages")
-        ?.addEventListener(
-          "click",
-          () => (window.location.href = "forum.html"),
-        );
-      document
-        .getElementById("openHome")
-        ?.addEventListener("click", () => (window.location.href = "home.html"));
+    slider.addEventListener("mousedown", (e) => {
+      isDown = true;
+      slider.style.cursor = "grabbing";
+      startX = e.pageX - slider.offsetLeft;
+      scrollLeft = slider.scrollLeft;
+      cancelAnimationFrame(rafID);
+    });
 
-      // --- Modal logic ---
-      const modal = document.getElementById("mojeOkno");
-      const openBtn = document.getElementById("otevritBtn");
-      const closeBtn = document.getElementById("zavritBtn");
-      const backdrop = document.getElementById("modalBackdrop");
+    slider.addEventListener("mouseleave", () => {
+      isDown = false;
+      slider.style.cursor = "grab";
+    });
+    slider.addEventListener("mouseup", () => {
+      isDown = false;
+      slider.style.cursor = "grab";
+      easeOut();
+    });
 
-      function openModal() {
-        modal.style.display = "flex";
-        document.body.classList.add("modal-open");
-        document.body.style.overflow = "hidden";
-      }
+    slider.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - slider.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      const prevScroll = slider.scrollLeft;
+      slider.scrollLeft = scrollLeft - walk;
+      velocity = slider.scrollLeft - prevScroll;
+    });
 
-      function closeModal() {
-        modal.style.display = "none";
-        document.body.classList.remove("modal-open");
-        document.body.style.overflow = "auto";
-      }
+    // --- Auth check ---
+    const currentUser = localStorage.getItem("moodooCurrentUser");
+    if (!currentUser) {
+      window.location.href = "po_prihlaseni.html";
+    }
 
-      openBtn.addEventListener("click", openModal);
-      closeBtn.addEventListener("click", closeModal);
-      backdrop.addEventListener("click", closeModal);
+    // --- Nav links ---
+    document
+      .getElementById("openSearch")
+      ?.addEventListener(
+        "click",
+        () => (window.location.href = "search.html"),
+      );
+    document
+      .getElementById("openMessages")
+      ?.addEventListener(
+        "click",
+        () => (window.location.href = "forum.html"),
+      );
+    document
+      .getElementById("openHome")
+      ?.addEventListener("click", () => (window.location.href = "home.html"));
 
-      // Close on Escape key
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") closeModal();
-      });
+    // --- Modal logic ---
+    const modal = document.getElementById("mojeOkno");
+    const openBtn = document.getElementById("otevritBtn");
+    const closeBtn = document.getElementById("zavritBtn");
+    const backdrop = document.getElementById("modalBackdrop");
 
-      MoodooLang.init();
+    function openModal() {
+      modal.style.display = "flex";
+      document.body.classList.add("modal-open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = "auto";
+    }
+
+    openBtn.addEventListener("click", openModal);
+    closeBtn.addEventListener("click", closeModal);
+    backdrop.addEventListener("click", closeModal);
+
+    // Close on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+    });
+
+    MoodooLang.init();
 
 
-              
 
-        function otevritKnihu(idKnihy) {
-    const data = knihy[idKnihy]; 
 
-    if (data) {
-   
+    function otevritKnihu(idKnihy) {
+      const data = knihy[idKnihy];
+
+      if (data) {
+
         document.getElementById('popup-nazev').innerHTML = data.nazev;
         document.getElementById('popup-img').src = data.obrazek;
         document.getElementById('popup-autor').textContent = data.autor;
-        
+
         document.getElementById('popup-popis').textContent = data.popis;
         document.getElementById('popup-zanry').textContent = data.zanry;
         document.getElementById('popup-konce').textContent = data.konce;
@@ -972,60 +1006,61 @@
         document.getElementById('btn-precist').href = data.linkCteni;
         document.getElementById('btn-diskuze').href = data.linkDiskuze;
 
-     
+
         document.getElementById('mojeOkno').style.display = 'flex';
-    } else {
+      } else {
         console.error("Kniha s ID " + idKnihy + " nebyla nalezena v objektu 'knihy'!");
+      }
     }
-}
 
-        // Funkce pro zavření (přidej si ji, ať se z toho okna dostaneš)
-        document.getElementById("zavritBtn").onclick = function () {
-          document.getElementById("mojeOkno").style.display = "none";
-        };
-    </script>
-    <script>
-// --- Data pro knihy (přidej si sem všechny, které chceš zobrazit) ---
+    // Funkce pro zavření (přidej si ji, ať se z toho okna dostaneš)
+    document.getElementById("zavritBtn").onclick = function () {
+      document.getElementById("mojeOkno").style.display = "none";
+    };
+  </script>
+  <script>
+    // --- Data pro knihy (přidej si sem všechny, které chceš zobrazit) ---
 
-        const knihy = {
-          kafka: {
-            nazev: "Kafka's<br>Metamorphosis",
-            autor: "Ladislav Horák 2026",
-            popis: "Rodina prožívá šok a odpor. Zpočátku se o něj sestra stará, ale postupně převládne finanční tíseň a vyčerpání. Nakonec ho vnímají jako břemeno a po jeho smrti pocítí úlevu a naději.",
-            zanry: "Horror, drama",
-            konce: "20",
-            doba: "5 - 30 minut",
-            obrazek: "images/Title.jpg",
-            linkCteni: "cteni_kafka.html",
-            linkDiskuze: "https://forum.web.cz/kafka"
-          },
+    const knihy = {
+      kafka: {
+        nazev: "Kafka's<br>Metamorphosis",
+        autor: "Ladislav Horák 2026",
+        popis: "Rodina prožívá šok a odpor. Zpočátku se o něj sestra stará, ale postupně převládne finanční tíseň a vyčerpání. Nakonec ho vnímají jako břemeno a po jeho smrti pocítí úlevu a naději.",
+        zanry: "Horror, drama",
+        konce: "20",
+        doba: "5 - 30 minut",
+        obrazek: "images/Title.jpg",
+        linkCteni: "cteni_kafka.html",
+        linkDiskuze: "https://forum.web.cz/kafka"
+      },
 
-          mesto_v_rytmu_tlapek: {
-            nazev: "Mesto v rytmu tlapek",
-            autor: "Ladislav Horák 2026",
-            popis:
-              "Noční běh přerve vteřina děsu. Prasklé vodítko, ztracený pes a závod s časem. V labyrintu uliček hrdina nehledá jen Maxe, ale i tvář z minulosti. Rozhoduje srdce, ne nohy.",
-            zanry: "Psychologické drama, Romantická novela, Urban Noir",
-            konce: "16",
-            doba: "5 - 20 minut",
-            obrazek: "images/unnamed.png",
-            linkCteni: "stories/Mesto_v_rytmu_tlapek.html",
-            linkDiskuze: "https://forum.web.cz/tlapka"
-          },
+      mesto_v_rytmu_tlapek: {
+        nazev: "Mesto v rytmu tlapek",
+        autor: "Ladislav Horák 2026",
+        popis:
+          "Noční běh přerve vteřina děsu. Prasklé vodítko, ztracený pes a závod s časem. V labyrintu uliček hrdina nehledá jen Maxe, ale i tvář z minulosti. Rozhoduje srdce, ne nohy.",
+        zanry: "Psychologické drama, Romantická novela, Urban Noir",
+        konce: "16",
+        doba: "5 - 20 minut",
+        obrazek: "images/unnamed.png",
+        linkCteni: "stories/Mesto_v_rytmu_tlapek.html",
+        linkDiskuze: "https://forum.web.cz/tlapka"
+      },
 
-          Krvavy_mesic: {
-            nazev: "Krvavý měsíc",
-            autor: "Ladislav Horák 2026",
-            popis:
-              "Noční běh přerve vteřina děsu. Prasklé vodítko, ztracený pes a závod s časem. V labyrintu uliček hrdina nehledá jen Maxe, ale i tvář z minulosti. Rozhoduje srdce, ne nohy.",
-            zanry: "Psychologické drama, Romantická novela, Urban Noir",
-            konce: "16",
-            doba: "5 - 20 minut",
-            obrazek: "images/b",
-            linkCteni: "stories/Mesto_v_rytmu_tlapek.html",
-            linkDiskuze: "https://forum.web.cz/tlapka"
-          },
-        };
-      </script>
-  </body>
+      Krvavy_mesic: {
+        nazev: "Krvavý měsíc",
+        autor: "Ladislav Horák 2026",
+        popis:
+          "Noční běh přerve vteřina děsu. Prasklé vodítko, ztracený pes a závod s časem. V labyrintu uliček hrdina nehledá jen Maxe, ale i tvář z minulosti. Rozhoduje srdce, ne nohy.",
+        zanry: "Psychologické drama, Romantická novela, Urban Noir",
+        konce: "16",
+        doba: "5 - 20 minut",
+        obrazek: "images/b",
+        linkCteni: "stories/Mesto_v_rytmu_tlapek.html",
+        linkDiskuze: "https://forum.web.cz/tlapka"
+      },
+    };
+  </script>
+</body>
+
 </html>
